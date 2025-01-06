@@ -4,7 +4,7 @@
     <ProjectVersion>2.1</ProjectVersion>
     <DockerTargetOS>Linux</DockerTargetOS>
     <DockerPublishLocally>False</DockerPublishLocally>
-    <ProjectGuid>40864047-c574-4fad-a30e-86e343f46a3e</ProjectGuid>
+    <ProjectGuid>d606841f-99ff-4ca2-b5b9-722a071d1fb7</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
     <DockerServiceUrl>{Scheme}://localhost:{ServicePort}/swagger</DockerServiceUrl>
     <DockerServiceName>coffeehouseapi</DockerServiceName>
