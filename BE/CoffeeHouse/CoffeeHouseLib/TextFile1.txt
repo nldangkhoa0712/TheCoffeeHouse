@@ -1,0 +1,3 @@
+﻿Scaffold-DbContext "Server=LAPTOP-E8TQ0T9U\SQLEXPRESS;Database=DBCoffeeHouse;User Id=admin;Password=123;TrustServerCertificate=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models
+
+connectionString = "Data Source=DBCoffeeHouse.mssql.somee.com;Initial Catalog=DBCoffeeHouse;User ID=buihuyphuc111_SQLLogin_1;Password=Somee2k3.;Persist Security Info=False;TrustServerCertificate=True"
