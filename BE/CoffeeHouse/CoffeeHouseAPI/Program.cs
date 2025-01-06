@@ -11,21 +11,16 @@ using CoffeeHouseAPI.Services;
 using CoffeeHouseAPI.Extensions.MiddleWares;
 
 namespace CoffeeHouseAPI
-{
+{ 
     public class Program
     {
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddDbContext<CoffeeHouseLib.Models.DbcoffeeHouseContext>(options =>
-            {
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-            });
-
             // Add services to the container.
-            builder.Services.AddAutoMapper(typeof(MappingProfiles).Assembly);
             builder.Services.Register(builder.Configuration);
+            
 
             var jwtKey = builder.Configuration["Jwt:Key"] ?? throw new ArgumentNullException("JWT Key cannot be null.");
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
@@ -47,8 +42,8 @@ namespace CoffeeHouseAPI
                 };
             });
 
-            builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
-            builder.Services.AddTransient<IEmailSender, EmailSender>();
+            //builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+            //builder.Services.AddTransient<IEmailSender, EmailSender>();
 
 
             builder.Services.AddControllers();
@@ -63,6 +58,9 @@ namespace CoffeeHouseAPI
             app.UseSwaggerUI();
 
             app.UseHttpsRedirection();
+
+            // Use cors
+            app.UseCors("AllowAll");
 
             app.UseAuthorization();
             app.UseAuthentication();

@@ -27,9 +27,9 @@ namespace CoffeeHouseAPI.Controllers
 
         [HttpPost]
         [Route("Login")]
-        public async Task<IActionResult> Login(string email, string password)
+        public async Task<IActionResult> Login([FromBody] LoginResquest request)
         {
-            var account = await _context.Accounts.Where(x => x.Email == email && x.Password == password).FirstOrDefaultAsync();
+            var account = await _context.Accounts.Where(x => x.Email == request.Email && x.Password == request.Password).FirstOrDefaultAsync();
 
             if (account == null)
             {
@@ -74,7 +74,7 @@ namespace CoffeeHouseAPI.Controllers
                 Subject = new ClaimsIdentity(new[]
                 {
                     new Claim(ClaimTypes.Name, customer.FullName),
-                    new Claim(ClaimTypes.Email, email)
+                    new Claim(ClaimTypes.Email, account.Email)
                 }),
                 Expires = DateTime.Now.AddMinutes(Convert.ToDouble(builder.Configuration["Jwt:Expires"])),
                 Issuer = issuer,
