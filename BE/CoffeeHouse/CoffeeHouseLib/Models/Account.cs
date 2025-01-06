@@ -21,11 +21,13 @@ public partial class Account
 
     public string? RefreshToken { get; set; }
 
-    public short? LoginFailed { get; set; }
+    public short LoginFailed { get; set; }
 
     public string? ResetPasswordToken { get; set; }
 
     public DateTime? ResetPasswordExpired { get; set; }
+
+    public DateTime? BlockExpire { get; set; }
 
     public virtual Customer Customer { get; set; } = null!;
 

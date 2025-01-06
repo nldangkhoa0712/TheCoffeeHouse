@@ -53,9 +53,9 @@ namespace CoffeeHouseAPI.Controllers
         }
 
         [NonAction]
-        public async void SaveChanges(DbcoffeeHouseContext context)
+        public void SaveChanges(DbcoffeeHouseContext context)
         {
-            var result = await context.SaveChangesAsync();
+            var result = context.SaveChanges();
             if (result < 0)
                 throw new Exception("Error!");
         }

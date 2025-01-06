@@ -68,6 +68,7 @@ public partial class DbcoffeeHouseContext : DbContext
             entity.HasIndex(e => e.Id, "UQ__Account__3214EC062D567715").IsUnique();
 
             entity.Property(e => e.AccessToken).HasMaxLength(255);
+            entity.Property(e => e.BlockExpire).HasColumnType("datetime");
             entity.Property(e => e.Email).HasMaxLength(255);
             entity.Property(e => e.Password).HasMaxLength(255);
             entity.Property(e => e.RefreshToken).HasMaxLength(255);
