@@ -1,5 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import { publicRoute, RouteProps } from "./routes";
+import "./index.scss";
 
 const routeRouter = (routeList: RouteProps[]) => {
   return routeList.map((item: RouteProps, index: number) => {
@@ -11,8 +12,6 @@ const routeRouter = (routeList: RouteProps[]) => {
     );
   });
 };
-
-console.log(routeRouter(publicRoute));
 
 function App() {
   return (

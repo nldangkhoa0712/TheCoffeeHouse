@@ -1,9 +1,8 @@
 import { ComponentType } from "react";
 import MainLayout from "../MainLayout";
+import Auth from "../pages/auth";
 import Content from "../pages/content";
 import Home from "../pages/home";
-
-// interface childrenRoute extends RouteProps {}
 
 export type RouteProps = {
     path: string,
@@ -19,6 +18,10 @@ export const publicRoute: RouteProps[] = [
             { path: '/home', component: Home },
             { path: '/content', component: Content }
         ]
+    },
+    {
+        path: "/auth",
+        component: Auth
     }
 
 ]
