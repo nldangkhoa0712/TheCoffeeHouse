@@ -12,6 +12,9 @@ namespace OrderService.Helper
             CreateMap<Account, CreateAccountRequest>();
             CreateMap<Customer, CreateAccountRequest>();
             CreateMap<CreateAccountRequest, Customer>();
+
+            CreateMap<RefreshTokenDTO, RefreshToken>();
+            CreateMap<RefreshToken, RefreshTokenDTO>();
         }
     }
 }

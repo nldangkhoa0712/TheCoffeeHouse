@@ -30,4 +30,6 @@ public partial class Account
     public virtual Customer Customer { get; set; } = null!;
 
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
+
+    public virtual RefreshToken? RefreshTokenNavigation { get; set; }
 }

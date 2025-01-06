@@ -1,4 +1,4 @@
-﻿using CoffeeHouseAPI.Services;
+﻿using CoffeeHouseAPI.Services.Email;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using OrderService.Helper;
