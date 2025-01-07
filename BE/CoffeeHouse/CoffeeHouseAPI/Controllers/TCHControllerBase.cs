@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace CoffeeHouseAPI.Controllers
 {
@@ -49,6 +50,14 @@ namespace CoffeeHouseAPI.Controllers
                 Email = account.Email,
             };
             return loginResponse;
+        }
+
+        [NonAction]
+        public void SaveChanges(DbcoffeeHouseContext context)
+        {
+            var result = context.SaveChanges();
+            if (result < 0)
+                throw new Exception("Error!");
         }
     }
 }

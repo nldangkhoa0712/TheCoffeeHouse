@@ -1,4 +1,4 @@
-﻿namespace CoffeeHouseAPI.Services
+﻿namespace CoffeeHouseAPI.Services.Email
 {
     public class EmailSettings
     {

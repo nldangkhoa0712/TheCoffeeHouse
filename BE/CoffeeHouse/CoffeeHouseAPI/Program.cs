@@ -20,7 +20,6 @@ namespace CoffeeHouseAPI
 
             // Add services to the container.
             builder.Services.Register(builder.Configuration);
-            
 
             var jwtKey = builder.Configuration["Jwt:Key"] ?? throw new ArgumentNullException("JWT Key cannot be null.");
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
@@ -37,23 +36,18 @@ namespace CoffeeHouseAPI
                     IssuerSigningKey = key,
                     ValidateIssuer = true,
                     ValidateAudience = true,
-                    ValidateLifetime = false,
+                    ValidateLifetime = true,
                     ValidateIssuerSigningKey = true
                 };
             });
 
-            //builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
-            //builder.Services.AddTransient<IEmailSender, EmailSender>();
-
-
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
-
-            // Configure the HTTP request pipeline.
+            
             app.UseSwagger();
             app.UseSwaggerUI();
 

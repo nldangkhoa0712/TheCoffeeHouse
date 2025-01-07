@@ -108,8 +108,9 @@ await httpContext.Response.WriteAsync(json);
                     httpContext.Response.ContentType = "application/json";
                     await httpContext.Response.WriteAsJsonAsync(new
                     {
+                        StatusCode = (int)HttpStatusCode.InternalServerError,
                         Message = "Internal Error.",
-                        Detail = "An unexpected error occurred."
+                        Detail = "An unexpected error occurred.",
                     });
                 }
 

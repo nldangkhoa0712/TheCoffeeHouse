@@ -3,7 +3,7 @@ using System.Net.Mail;
 using System.Net;
 using Microsoft.AspNetCore.Identity.UI.Services;
 
-namespace CoffeeHouseAPI.Services
+namespace CoffeeHouseAPI.Services.Email
 {
     public class EmailSender : IEmailSender
     {
