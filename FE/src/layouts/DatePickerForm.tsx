@@ -1,7 +1,5 @@
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
-import React from "react";
-
 const DatePickerForm = ({ value, handleChange }: any) => {
   return (
     <div style={{ width: "100%" }}>
