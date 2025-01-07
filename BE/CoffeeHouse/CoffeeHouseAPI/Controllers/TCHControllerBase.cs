@@ -20,7 +20,6 @@ namespace CoffeeHouseAPI.Controllers
         /// </summary>
         /// <returns></returns>
         /// <exception cref="UnauthorizedAccessException"></exception>
-        [ApiExplorerSettings(IgnoreApi = true)]
         [NonAction]
         public LoginResponse? GetLoginResponseFromHttpContext(AuthorizationFilterContext context)
         {
@@ -58,6 +57,14 @@ namespace CoffeeHouseAPI.Controllers
             var result = context.SaveChanges();
             if (result < 0)
                 throw new Exception("Error!");
+        }
+
+        [NonAction]
+        public string GetUrlPort()
+        {
+            var request = HttpContext.Request;
+            var serverUrl = $"{request.Scheme}://{request.Host}{request.PathBase}";
+            return serverUrl;
         }
     }
 }
