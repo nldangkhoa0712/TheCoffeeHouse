@@ -27,7 +27,7 @@ export const set = <T>(key: string, data: T): void => {
 }
 
 export const setAccessToken = (token: string) => {
-    set(KEY_STORAGE.ACCESS_TOKEN, token)
+    set<string>(KEY_STORAGE.ACCESS_TOKEN, token)
 }
 
 export const getAccessToken = () => {

@@ -1,15 +1,15 @@
 import { axiosCallAPI } from "../../axios/axiosCallAPI"
 
-type ResponseModel<T> = {
+export interface ResponseModel<T = any> {
     value: T,
     status: number,
     message: string,
-
+    isSuccess: boolean
 }
 
-const callAPI = async <T>(url: string, resquestData: object, requestQuery: Record<string, string>): Promise<ResponseModel<T>> => {
+const callAPI = async <T>(url: string, resquestData: object | undefined | string, requestQuery: Record<string, string> | undefined): Promise<ResponseModel<T>> => {
     const queryParams = new URLSearchParams(requestQuery)
-    const URLAPI = queryParams ? `${url}?${queryParams}` : url
+    const URLAPI = requestQuery ? `${url}?${queryParams}` : url
     try {
         const response = await axiosCallAPI(URLAPI, {
             method: axiosCallAPI.defaults.method,
@@ -17,27 +17,26 @@ const callAPI = async <T>(url: string, resquestData: object, requestQuery: Recor
         })
         return response.data
     } catch (error) {
-        console.log(error)
         throw error
     }
 }
 
 
-export const get = <T>(url: string, requestQuery: Record<string, string>, responseData: object) => {
+export const get = <T>(url: string, requestQuery: Record<string, string> | undefined, responseData: object) => {
     return callAPI<T>(url, responseData, requestQuery,)
 }
 
-export const post = <T>(url: string, requestQuery: Record<string, string>, responseData: object) => {
+export const post = <T>(url: string, requestQuery: Record<string, string> | undefined, responseData: object | string) => {
     axiosCallAPI.defaults.method = "POST"
     return callAPI<T>(url, responseData, requestQuery)
 }
 
-export const del = <T>(url: string, requestQuery: Record<string, string>, responseData: object) => {
+export const del = <T>(url: string, requestQuery: Record<string, string> | undefined, responseData: object) => {
     axiosCallAPI.defaults.method = 'DELETE'
     return callAPI<T>(url, responseData, requestQuery)
 }
 
-export const put = <T>(url: string, requestQuery: Record<string, string>, responseData: object) => {
+export const put = <T>(url: string, requestQuery: Record<string, string> | undefined, responseData: object) => {
     axiosCallAPI.defaults.method = 'PUT'
     return callAPI<T>(url, responseData, requestQuery)
 }
