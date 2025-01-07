@@ -4,3 +4,11 @@ import { AuthService } from "../api/services";
 export const useLogin = () => {
   return useMutation(AuthService.login);
 };
+
+export const useRegister = () => {
+  return useMutation(AuthService.register);
+};
+
+export const useGetOTP = () => {
+  return useMutation(AuthService.getOTP);
+};

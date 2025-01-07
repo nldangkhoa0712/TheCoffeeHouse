@@ -9,7 +9,7 @@
   right: 0;
   width: 50%;
   height: 100%;
-  transition: 0.6s ease-in-out 0.6s, visibility 0s 0.8s;
+  transition: 0.6s ease-in-out;
   z-index: 2;
 }
 
@@ -21,18 +21,6 @@
   right: 50%;
 }
 
-.form-register {
-  visibility: hidden;
-}
-
-.form-box.active .form-register {
-  visibility: visible;
-}
-
-.form-box.active .form-login {
-  visibility: hidden;
-}
-
 .btn-submit {
   width: 80%;
   height: 40px;
@@ -41,4 +29,20 @@
   border-radius: 30px !important;
   font-size: 0.75rem !important;
   font-weight: 350 !important;
+}
+
+.countdown-resend {
+  display: flex;
+  width: 100%;
+  justify-content: space-around;
+  gap: 24px;
+}
+
+.countdown-resend button {
+  font-size: 0.75rem;
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+  text-decoration: underline solid 1px;
+  color: #9e6d4a;
 }

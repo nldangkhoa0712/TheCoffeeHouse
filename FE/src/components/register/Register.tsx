@@ -1,9 +1,15 @@
-import { Controller, useForm } from "react-hook-form";
-import TextInputForm from "../../layouts/TextInputForm";
 import { Button } from "@mui/material";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { Controller, useForm } from "react-hook-form";
+import { useRegister } from "../../hooks/auth.api";
+import DatePickerForm from "../../layouts/DatePickerForm";
+import TextInputForm from "../../layouts/TextInputForm";
 import { RegisterModel } from "../../models/auth.model";
+import { handleFormatDate } from "../../utils/handleFormatDate";
 
-const Register = () => {
+const Register = ({ setEmail }: any) => {
+  const { mutate: mutateRegister } = useRegister();
   const { handleSubmit, control } = useForm<RegisterModel>({
     defaultValues: {
       fullName: "",
@@ -14,8 +20,20 @@ const Register = () => {
       password: "",
     },
   });
-  const onSubmit = (data: unknown) => {
-    console.log(data);
+  const onSubmit = (data: RegisterModel) => {
+    setEmail(data.email);
+    const payload = {
+      ...data,
+      dateOfBirth: handleFormatDate(data.dateOfBirth),
+    };
+    mutateRegister(payload, {
+      onSuccess(resp) {
+        // console.log(resp);
+        return resp;
+      },
+    });
+
+    // if (ErrorRegister)
   };
   return (
     <form className="form form-register" onSubmit={handleSubmit(onSubmit)}>
@@ -46,11 +64,14 @@ const Register = () => {
         control={control}
         name="dateOfBirth"
         render={({ field }) => (
-          <TextInputForm
-            label="Date of Birth"
-            value={field.value}
-            onChange={field.onChange}
-          />
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePickerForm value={field.value} handleChange={field.onChange} />
+          </LocalizationProvider>
+          // <TextInputForm
+          //   label="Date of Birth"
+          //   value={field.value}
+          //   onChange={field.onChange}
+          // />
         )}
       ></Controller>
       <Controller

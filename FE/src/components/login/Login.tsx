@@ -1,13 +1,14 @@
 import { Button } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
-import { AuthModel } from "../../models/auth.model";
-import TextInputForm from "../../layouts/TextInputForm";
-import "../../styles/page/auth/index.css";
 import { useLogin } from "../../hooks/auth.api";
-import { storageService } from "../../storage";
+import TextInputForm from "../../layouts/TextInputForm";
+import { AuthModel } from "../../models/auth.model";
+import "../../styles/page/auth/index.css";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const { mutate: mutateLogin } = useLogin();
+  const navigate = useNavigate();
   const { handleSubmit, control } = useForm<AuthModel>({
     defaultValues: {
       email: "",
@@ -16,7 +17,12 @@ const Login = () => {
   });
 
   const onSubmit = (data: AuthModel) => {
-    mutateLogin(data);
+    mutateLogin(data, {
+      onSuccess(resp) {
+        console.log(resp);
+        navigate("/");
+      },
+    });
   };
   return (
     <form className="form form-login" onSubmit={handleSubmit(onSubmit)}>

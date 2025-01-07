@@ -11,3 +11,32 @@ export interface RegisterModel {
     email: string,
     password: string,
 }
+
+export interface UserResponse {
+    token: string
+    userAccount: {
+        fullName: string,
+        dateOfBirth: string,
+        phone: string,
+        idRole: boolean,
+        email: string
+    }
+}
+
+export interface VerifyPayload {
+    email: string,
+    otp: string
+}
+
+export interface User {
+    fullName: string,
+    dateOfBirth: string
+    phone: string
+    idRole: boolean
+    email: string
+}
+
+export const UserDTO = (user: UserResponse): User => {
+    const { userAccount } = user
+    return userAccount
+}
