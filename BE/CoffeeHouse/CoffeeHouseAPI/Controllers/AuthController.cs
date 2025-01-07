@@ -174,12 +174,10 @@ namespace CoffeeHouseAPI.Controllers
             };
 
             await _context.Customers.AddAsync(customer);
-            var result = await _context.SaveChangesAsync();
-            if (result < 0)
-                throw new Exception("Internal Error");
+            this.SaveChanges(_context);
 
-            string newOtp = GENERATE_DATA.GenerateNumber(6);
-
+            string newOtp = GENERATE_DATA.GenerateString(32);
+            string urlVerify = this.GetUrlPort() + "/Verify?verify=" + newOtp;
             account = new Account
             {
                 Email = request.Email,
@@ -190,12 +188,10 @@ namespace CoffeeHouseAPI.Controllers
             };
 
             await _context.Accounts.AddAsync(account);
-            result = await _context.SaveChangesAsync();
-            if (result < 0)
-                throw new Exception("Internal Error");
+            this.SaveChanges(_context);
 
             string subject = "Xác nhận tài khoản";
-            await _email.SendEmailAsync(account.Email, subject, EMAIL_TEMPLATE.SendOtpTemplate(newOtp));
+            await _email.SendEmailAsync(account.Email, subject, EMAIL_TEMPLATE.SendOtpTemplate(urlVerify));
 
             return Ok(new APIReponse
             {
