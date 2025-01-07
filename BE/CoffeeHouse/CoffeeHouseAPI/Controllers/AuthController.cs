@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
 using Microsoft.Identity.Client;
 using Microsoft.IdentityModel.Tokens;
@@ -106,6 +107,16 @@ namespace CoffeeHouseAPI.Controllers
             LoginResponse loginResponse = this.MappingLoginResponseFromAccountAndCustomer(customer, account);
 
             string stringToken = CreateToken(customer, account);
+
+            if (account.RefreshToken != null)
+            {
+                var oldRfsToken = _context.RefreshTokens.Find(account.RefreshToken);
+                if (oldRfsToken != null)
+                {
+                    oldRfsToken.Revoke = DateTime.Now;
+                    this.SaveChanges(_context);
+                }
+            }
 
             RefreshTokenDTO refreshTokenDTO = GenerateRefreshToken();
             RefreshToken refreshToken = _mapper.Map<RefreshToken>(refreshTokenDTO);
@@ -365,13 +376,61 @@ namespace CoffeeHouseAPI.Controllers
 
         }
 
-        //[HttpPost]
-        //[Route("GetNewToken")]
-        //public async Task<IActionResult> GetNewToken(string token)
-        //{
 
-        //}
+        [HttpPost]
+        [Route("GetNewToken")]
+        public async Task<IActionResult> GetNewToken(string token)
+        {
+            Account? account;
+            Customer? customer;
 
+            var rfsTokenFromHttp = HttpContext.Request.Cookies["refreshToken"];
+
+            if (rfsTokenFromHttp == null) return UnauthorizedResponse();
+
+            var refreshToken = await _context.RefreshTokens.Where(x => x.RefreshToken1 == rfsTokenFromHttp).FirstOrDefaultAsync();
+
+            if (refreshToken == null) return UnauthorizedResponse();
+
+            if (refreshToken.Revoke != null) return UnauthorizedResponse();
+
+            var accountFromRefreshToken = _context.Accounts.Where(x => x.RefreshToken == refreshToken.RefreshToken1).FirstOrDefault();
+
+            if (accountFromRefreshToken == null) return UnauthorizedResponse();
+
+            GetAccountFromJwtToken(token, out customer, out account);
+
+            if (account == null || customer == null) return UnauthorizedResponse();
+
+            if (account.Email != accountFromRefreshToken.Email) return UnauthorizedResponse();
+
+            var newToken = CreateToken(customer, account);
+
+            RefreshTokenDTO refreshTokenDTO = GenerateRefreshToken();
+            refreshToken.RefreshToken1 = refreshTokenDTO.RefreshToken1;
+            refreshToken.Expire = refreshTokenDTO.Expire;
+            refreshToken.Created = refreshTokenDTO.Created;
+            this.SaveChanges(_context);
+            account.RefreshToken = refreshToken.RefreshToken1;
+            this.SaveChanges(_context);
+
+            return Ok(new APIReponse
+            {
+                IsSuccess = true,
+                Message = "Get new token success",
+                Status = (int)StatusCodes.Status200OK,
+                Value = newToken
+            });
+        }
+        private ObjectResult UnauthorizedResponse()
+        {
+            return Unauthorized(new APIReponse
+            {
+                IsSuccess = false,
+                Message = "Login timeout.",
+                Status = (int)StatusCodes.Status401Unauthorized,
+            });
+        }
 
         private string CreateToken(Customer customer, Account account)
         {
@@ -380,6 +439,7 @@ namespace CoffeeHouseAPI.Controllers
             var audience = builder.Configuration["Jwt:Audience"];
             var jwtKey = builder.Configuration["Jwt:Key"] ?? throw new ArgumentNullException("JWT Key cannot be null.");
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
+
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[]
@@ -420,6 +480,49 @@ namespace CoffeeHouseAPI.Controllers
             };
 
             return refreshToken;
+        }
+
+        private void GetAccountFromJwtToken(string token, out Customer? customer, out Account? account)
+        {
+            var builder = WebApplication.CreateBuilder();
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var jwtKey = builder.Configuration["Jwt:Key"] ?? throw new ArgumentNullException("JWT Key cannot be null.");
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
+            var issuer = builder.Configuration["Jwt:Issuer"];
+            var audience = builder.Configuration["Jwt:Audience"];
+
+            var validationParameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = key,
+                ValidateIssuer = true,
+                ValidIssuer = issuer,
+                ValidateAudience = true,
+                ValidAudience = audience,
+                ValidateLifetime = false,
+                ClockSkew = TimeSpan.Zero
+            };
+
+            SecurityToken validatedToken;
+            ClaimsPrincipal principal;
+
+            try
+            {
+                principal = tokenHandler.ValidateToken(token, validationParameters, out validatedToken);
+
+                var claims = principal.Claims;
+                var name = claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+                var email = claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+
+                account = _context.Accounts.Where(x => x.Email == email && (x.BlockExpire < DateTime.Now || x.BlockExpire == null)).FirstOrDefault();
+                customer = _context.Customers.Find(account?.CustomerId ?? -1);
+
+            }
+            catch (SecurityTokenException)
+            {
+                account = null;
+                customer = null;
+            }
         }
     }
 }
