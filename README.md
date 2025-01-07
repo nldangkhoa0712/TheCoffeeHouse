@@ -1,4 +1,4 @@
-# Project “The Coffee House” !!!
+# Project “Coffee House” !!!
 
 1. Giới thiệu sản phẩm 
     1. 
