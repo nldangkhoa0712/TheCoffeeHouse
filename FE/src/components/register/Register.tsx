@@ -8,7 +8,7 @@ import TextInputForm from "../../layouts/TextInputForm";
 import { RegisterModel } from "../../models/auth.model";
 import { handleFormatDate } from "../../utils/handleFormatDate";
 
-const Register = ({ setEmail }: any) => {
+const Register = () => {
   const { mutate: mutateRegister } = useRegister();
   const { handleSubmit, control } = useForm<RegisterModel>({
     defaultValues: {
@@ -21,7 +21,6 @@ const Register = ({ setEmail }: any) => {
     },
   });
   const onSubmit = (data: RegisterModel) => {
-    setEmail(data.email);
     const payload = {
       ...data,
       dateOfBirth: handleFormatDate(data.dateOfBirth),
