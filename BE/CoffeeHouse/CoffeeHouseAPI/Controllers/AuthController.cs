@@ -520,5 +520,14 @@ namespace CoffeeHouseAPI.Controllers
                 customer = null;
             }
         }
+
+        private APIReponse ReturnAPIResponse(string message, object value, int StatusCode, bool isSuccess = false)
+        {
+            return new APIReponse
+            {
+                Message = message,
+                Value = value,
+            };
+        }
     }
 }

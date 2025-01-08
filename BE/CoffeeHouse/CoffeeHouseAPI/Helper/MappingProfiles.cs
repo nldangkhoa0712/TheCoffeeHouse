@@ -1,5 +1,7 @@
-﻿using AutoMapper;
+﻿using System.ComponentModel;
+using AutoMapper;
 using CoffeeHouseAPI.DTOs.Auth;
+using CoffeeHouseAPI.DTOs.Category;
 using CoffeeHouseLib.Models;
 
 namespace OrderService.Helper
@@ -10,11 +12,15 @@ namespace OrderService.Helper
         {
             CreateMap<CreateAccountRequest, Account>();
             CreateMap<Account, CreateAccountRequest>();
+
             CreateMap<Customer, CreateAccountRequest>();
             CreateMap<CreateAccountRequest, Customer>();
 
             CreateMap<RefreshTokenDTO, RefreshToken>();
             CreateMap<RefreshToken, RefreshTokenDTO>();
+
+            CreateMap<Category, CategoryDTO>();
+            CreateMap<CategoryDTO, Category>();
         }
     }
 }
