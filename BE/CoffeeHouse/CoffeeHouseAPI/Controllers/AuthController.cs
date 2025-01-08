@@ -209,7 +209,7 @@ namespace CoffeeHouseAPI.Controllers
         [Route("VerifyAccount")]
         public async Task<IActionResult> VerifyAccount([FromBody] VerifyAccountRequest request)
         {
-            var account = await _context.Accounts.Where(x => x.Email == request.Email).FirstOrDefaultAsync();
+            var account = await _context.Accounts.Where(x => x.VerifyToken == request.Otp).FirstOrDefaultAsync();
             if (account == null)
             {
                 return BadRequest(new APIReponse
