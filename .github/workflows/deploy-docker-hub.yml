@@ -37,15 +37,25 @@ jobs:
       - name: Set up Docker tags
         id: docker-tags
         run: |
-          IMAGE_NAME=the-coffee-backend
-          GIT_SHA=$(git rev-parse --short HEAD) 
-          echo "IMAGE_NAME=${IMAGE_NAME}" >> $GITHUB_ENV
-          echo "TAG_LATEST=${IMAGE_NAME}:latest" >> $GITHUB_ENV
-          echo "TAG_SHA=${IMAGE_NAME}:${GIT_SHA}" >> $GITHUB_ENV
+          # Set default image name and tag
+          DEFAULT_IMAGE_NAME="phuoc194203/init"
+          DEFAULT_IMAGE_TAG="v1"
+          
+          # Generate Git SHA for unique tagging
+          GIT_SHA=$(git rev-parse --short HEAD)
+          
+          # Export variables for Docker image name and tags
+          echo "IMAGE_NAME=${DEFAULT_IMAGE_NAME}" >> $GITHUB_ENV
+          echo "TAG_DEFAULT=${DEFAULT_IMAGE_NAME}:${DEFAULT_IMAGE_TAG}" >> $GITHUB_ENV
+          echo "TAG_LATEST=${DEFAULT_IMAGE_NAME}:latest" >> $GITHUB_ENV
+          echo "TAG_SHA=${DEFAULT_IMAGE_NAME}:${GIT_SHA}" >> $GITHUB_ENV
 
       - name: Build Docker image
         run: |
-          docker build . -t the-coffee-backend -f BE/CoffeeHouse/CoffeeHouseAPI/Dockerfile
+          # Use default image name and tags
+          docker build . -t ${{ env.TAG_DEFAULT }} -f BE/CoffeeHouse/CoffeeHouseAPI/Dockerfile
+          docker tag ${{ env.TAG_DEFAULT }} ${{ env.TAG_LATEST }}
+          docker tag ${{ env.TAG_DEFAULT }} ${{ env.TAG_SHA }}
 
       - name: Push Docker image
         run: |
