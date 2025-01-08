@@ -11,11 +11,11 @@ EXPOSE 8081
 # This stage is used to build the service project
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
-WORKDIR /CoffeeHouse
-COPY ["CoffeeHouse/CoffeeHouseAPI/CoffeeHouseAPI.csproj", "CoffeeHouseAPI/"]
+WORKDIR /src
+COPY ["CoffeeHouse/CoffeeHouseAPI/CoffeeHouseAPI.csproj", "CoffeeHouse/"]
 RUN dotnet restore "./CoffeeHouseAPI/CoffeeHouseAPI.csproj"
 COPY . .
-WORKDIR "/CoffeeHouse/CoffeeHouseAPI"
+WORKDIR "/src/CoffeeHouse"
 RUN dotnet build "./CoffeeHouseAPI.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage
