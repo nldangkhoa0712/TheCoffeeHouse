@@ -4,14 +4,17 @@ import { useLogin } from "../../hooks/auth.api";
 import TextInputForm from "../../layouts/TextInputForm";
 import { AuthModel } from "../../models/auth.model";
 import "../../styles/page/auth/index.css";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Login = () => {
+  // const router = useRouter()
   const { mutate: mutateLogin } = useLogin();
   const navigate = useNavigate();
+  const { search } = useLocation();
+  const emailQuery = new URLSearchParams(search).get("email");
   const { handleSubmit, control } = useForm<AuthModel>({
     defaultValues: {
-      email: "",
+      email: emailQuery ? emailQuery : "",
       password: "",
     },
   });
@@ -19,7 +22,6 @@ const Login = () => {
   const onSubmit = (data: AuthModel) => {
     mutateLogin(data, {
       onSuccess(resp) {
-        console.log(resp);
         navigate("/");
       },
     });

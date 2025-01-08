@@ -23,6 +23,6 @@
       "apexcharts/*": ["./node_modules/apexcharts-clevision/*"]
     }
   },
-  "include": ["src/**/*.ts", "declaration.d.ts", "node_modules/firebase"],
+  "include": ["src/**/*", "declaration.d.ts"],
   "exclude": ["node_modules"]
 }
