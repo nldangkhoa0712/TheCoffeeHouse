@@ -15,7 +15,7 @@ WORKDIR /src
 COPY ["./BE/CoffeeHouse/CoffeeHouseAPI/CoffeeHouseAPI.csproj", "CoffeeHouseAPI/"]
 COPY ["./BE/CoffeeHouse/CoffeeHouseLib/CoffeeHouseLib.csproj", "CoffeeHouseLib/"]
 RUN dotnet restore "./CoffeeHouseAPI/CoffeeHouseAPI.csproj"
-COPY . .
+COPY . . .
 WORKDIR "/src/CoffeeHouseAPI"
 RUN dotnet build "./CoffeeHouseAPI.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
