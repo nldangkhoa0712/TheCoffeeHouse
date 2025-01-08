@@ -19,6 +19,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Restore dependencies
+        run: dotnet restore .
+
       - name: Build CoffeeHouseLib
         run: dotnet build BE/CoffeeHouse/CoffeeHouseLib/CoffeeHouseLib.csproj --configuration Release
 
