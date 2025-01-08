@@ -36,8 +36,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          echo "Building image with the-coffee-backend:$(date +%s)"
-          sudo docker build -t the-coffee-backend:$(date +%s)
+          sudo docker build -t the-coffee-backend:$(date +%s) --file ./BE/Dockerfile ./BE
 
       - name: Push Docker image
         run: |
