@@ -59,5 +59,7 @@ jobs:
 
       - name: Push Docker image
         run: |
-          docker push the-coffee-backend
-          docker push $IMAGE_NAME:$GIT_SHA
+          # Push all tags for the built image
+          docker push ${{ env.TAG_DEFAULT }}
+          docker push ${{ env.TAG_LATEST }}
+          docker push ${{ env.TAG_SHA }}
