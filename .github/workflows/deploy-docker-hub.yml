@@ -36,7 +36,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t the-coffee-backend -f docker-config/Dockerfile .
+          docker build -t your-image-name -f BE/CoffeeHouse/docker-config/Dockerfile .
 
       - name: Push Docker image
         run: |
