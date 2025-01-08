@@ -36,7 +36,8 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t $IMAGE_NAME:latest -t $IMAGE_NAME:$GIT_SHA ./BE
+          echo "Building image with $IMAGE_NAME:latest and $IMAGE_NAME:$GIT_SHA"
+          sudo docker build -t $IMAGE_NAME:latest -t $IMAGE_NAME:$GIT_SHA ./BE
 
       - name: Push Docker image
         run: |
