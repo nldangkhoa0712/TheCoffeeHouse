@@ -3,6 +3,7 @@ import MainLayout from "../MainLayout";
 import Auth from "../pages/auth";
 import Content from "../pages/content";
 import Home from "../pages/home";
+import VerifySuccess from "../pages/verifySuccess";
 
 export type RouteProps = {
     path: string,
@@ -22,6 +23,11 @@ export const publicRoute: RouteProps[] = [
     {
         path: "/auth",
         component: Auth
+    },
+    {
+        path: "/verify",
+        component: VerifySuccess
     }
+
 
 ]

@@ -24,7 +24,6 @@ export interface UserResponse {
 }
 
 export interface VerifyPayload {
-    email: string,
     otp: string
 }
 
