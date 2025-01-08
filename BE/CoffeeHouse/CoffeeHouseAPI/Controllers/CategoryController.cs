@@ -58,5 +58,35 @@ namespace CoffeeHouseAPI.Controllers
                 IsSuccess = true
             });
         }
+
+        [HttpPut]
+        [Route("UpdateCategory")]
+
+        public async Task<IActionResult> UpdateCategory([FromQuery] int id, [FromBody] CategoryDTO categoryDTO)
+        {
+            var category = await _context.Categories.FindAsync(id);
+            if (category == null)
+            {
+                return BadRequest(new APIReponse
+                   {
+                    Status = (int)StatusCodes.Status400BadRequest,
+                    Value = null,
+                    Message = "Update Failed",
+                    IsSuccess = false
+                });
+            }
+
+            category.IdParent = categoryDTO.IdParent;
+            category.CategoryName = categoryDTO.CategoryName;
+            this.SaveChanges(_context);
+
+            return Ok(new APIReponse
+            {
+                Status = (int)StatusCodes.Status200OK,
+                Value = category,
+                Message = "Update success",
+                IsSuccess = true
+            });
+        }
     }
 }

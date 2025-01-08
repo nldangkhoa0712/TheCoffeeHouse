@@ -56,5 +56,7 @@ namespace CoffeeHouseAPI.Helper
             }
             return new string(array);
         }
+
+
     }
 }
