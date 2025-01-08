@@ -12,7 +12,7 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /CoffeeHouse
-COPY ["CoffeeHouseAPI/CoffeeHouseAPI.csproj", "CoffeeHouseAPI/"]
+COPY ["CoffeeHouse/CoffeeHouseAPI/CoffeeHouseAPI.csproj", "CoffeeHouseAPI/"]
 RUN dotnet restore "./CoffeeHouseAPI/CoffeeHouseAPI.csproj"
 COPY . .
 WORKDIR "/CoffeeHouse/CoffeeHouseAPI"
