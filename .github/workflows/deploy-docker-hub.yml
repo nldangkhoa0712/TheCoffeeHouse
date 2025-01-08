@@ -4,13 +4,13 @@ on:
   push:
     branches:
       - master # Chỉ kích hoạt khi có thay đổi trên nhánh main
-    paths:
-      - "BE/**" # Chỉ kích hoạt khi có thay đổi trong thư mục BE
+    # paths:
+    #   - "BE/**" # Chỉ kích hoạt khi có thay đổi trong thư mục BE
   pull_request:
     branches:
       - master # Kích hoạt khi có pull request vào nhánh main
-    paths:
-      - "BE/**"
+    # paths:
+    #   - "BE/**"
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
