@@ -176,8 +176,12 @@ namespace CoffeeHouseAPI.Controllers
             await _context.Customers.AddAsync(customer);
             this.SaveChanges(_context);
 
-            string newOtp = GENERATE_DATA.GenerateString(32);
-            string urlVerify = this.GetUrlPort() + "/Verify?verify=" + newOtp;
+            string newOtp = GENERATE_DATA.GenerateString(64);
+
+            var builder = WebApplication.CreateBuilder();
+            string frontEndDomain = builder.Configuration["FrontendDomain"] ?? string.Empty;
+            string urlVerify = frontEndDomain + "/Verify?token=" + newOtp;
+            
             account = new Account
             {
                 Email = request.Email,
@@ -237,14 +241,14 @@ namespace CoffeeHouseAPI.Controllers
             }
 
             account.VerifyTime = DateTime.Now;
-            var result = await _context.SaveChangesAsync();
-            if (result < 0)
-                throw new Exception("Internal Error");
+            this.SaveChanges(_context);
+
             return Ok(new APIReponse
             {
                 IsSuccess = true,
                 Message = "Verify account success.",
                 Status = (int)StatusCodes.Status200OK,
+                Value = account.Email
             });
         }
 
@@ -273,14 +277,17 @@ namespace CoffeeHouseAPI.Controllers
                 });
             }
 
-            string newOtp = GENERATE_DATA.GenerateNumber(6);
+            string newOtp = GENERATE_DATA.GenerateString(64);
+
+            var builder = WebApplication.CreateBuilder();
+            string frontEndDomain = builder.Configuration["FrontendDomain"] ?? string.Empty;
+            string urlVerify = frontEndDomain + "/Verify?token=" + newOtp;
+            
             account.VerifyToken = newOtp;
-            var result = await _context.SaveChangesAsync();
-            if (result <= 0)
-                throw new Exception("Update OTP has error");
+            this.SaveChanges(_context);
 
             string subject = "Xác nhận tài khoản";
-            await _email.SendEmailAsync(email, subject, EMAIL_TEMPLATE.SendOtpTemplate(newOtp));
+            await _email.SendEmailAsync(account.Email, subject, EMAIL_TEMPLATE.SendOtpTemplate(urlVerify));
 
             return Ok(new APIReponse
             {

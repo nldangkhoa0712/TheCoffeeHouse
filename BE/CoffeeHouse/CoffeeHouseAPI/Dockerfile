@@ -16,7 +16,7 @@ COPY ["./BE/CoffeeHouse/CoffeeHouseAPI/CoffeeHouseAPI.csproj", "CoffeeHouseAPI/"
 COPY ["./BE/CoffeeHouse/CoffeeHouseLib/CoffeeHouseLib.csproj", "CoffeeHouseLib/"]
 RUN dotnet restore "./CoffeeHouseAPI/CoffeeHouseAPI.csproj"
 COPY . .
-WORKDIR "/src/BE/CoffeeHouse/CoffeeHouseAPI/"
+WORKDIR "/src/BE/CoffeeHouse/CoffeeHouseAPI"
 RUN dotnet build "./CoffeeHouseAPI.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage
