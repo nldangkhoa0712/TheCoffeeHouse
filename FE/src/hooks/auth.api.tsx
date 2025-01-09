@@ -12,3 +12,7 @@ export const useRegister = () => {
 export const useGetOTP = () => {
   return useMutation(AuthService.getOTP);
 };
+
+export const useVerify = () => {
+  return useMutation(AuthService.verify);
+};
