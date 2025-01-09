@@ -1,14 +1,19 @@
-import { Button } from "@mui/material";
+import { Button, CircularProgress } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 import { useLogin } from "../../hooks/auth.api";
 import TextInputForm from "../../layouts/TextInputForm";
 import { AuthModel } from "../../models/auth.model";
 import "../../styles/page/auth/index.css";
 import { useLocation, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
-const Login = () => {
+interface LoginVerify {
+  setForgot: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const Login = ({ setForgot }: LoginVerify) => {
   // const router = useRouter()
-  const { mutate: mutateLogin } = useLogin();
+  const { mutate: mutateLogin, isLoading } = useLogin();
   const navigate = useNavigate();
   const { search } = useLocation();
   const emailQuery = new URLSearchParams(search).get("email");
@@ -52,9 +57,18 @@ const Login = () => {
         )}
       ></Controller>
 
-      <p style={{ textDecoration: "underline" }}>Forgot Password?</p>
+      <p
+        onClick={() => setForgot(true)}
+        style={{ textDecoration: "underline", cursor: "pointer" }}
+      >
+        Forgot Password?
+      </p>
       <Button className="btn-submit" type="submit">
-        Login
+        {isLoading ? (
+          <CircularProgress size={20} style={{ color: "white" }} />
+        ) : (
+          "Login"
+        )}
       </Button>
       <p style={{ textDecoration: "underline" }}>Create Account or Gmail</p>
     </form>
