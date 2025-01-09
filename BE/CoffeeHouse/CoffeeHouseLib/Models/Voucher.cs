@@ -21,7 +21,7 @@ public partial class Voucher
 
     public int? UsageLimit { get; set; }
 
-    public int LitmitPerUser { get; set; }
+    public int LimitPerUser { get; set; }
 
     public bool IsActive { get; set; }
 

@@ -110,19 +110,19 @@ namespace CoffeeHouseAPI.Controllers
 
             if (account.RefreshToken != null)
             {
-                var oldRfsToken = _context.RefreshTokens.Find(account.RefreshToken);
+                var oldRfsToken = _context.RefreshTokens1.Find(account.RefreshToken);
                 if (oldRfsToken != null)
                 {
-                    oldRfsToken.Revoke = DateTime.Now;
+                     oldRfsToken.Revoke = DateTime.Now;
                     this.SaveChanges(_context);
                 }
             }
 
             RefreshTokenDTO refreshTokenDTO = GenerateRefreshToken();
-            RefreshToken refreshToken = _mapper.Map<RefreshToken>(refreshTokenDTO);
-            _context.RefreshTokens.Add(refreshToken);
+            RefreshToken1 refreshToken = _mapper.Map<RefreshToken1>(refreshTokenDTO);
+            _context.RefreshTokens1.Add(refreshToken);
             this.SaveChanges(_context);
-            account.RefreshToken = refreshToken.RefreshToken1;
+            account.RefreshToken = refreshToken.RefreshToken;
             account.LoginFailed = 0;
             this.SaveChanges(_context);
 
@@ -134,7 +134,7 @@ namespace CoffeeHouseAPI.Controllers
                 Expires = refreshToken.Expire
             };
 
-            Response.Cookies.Append("refreshToken", refreshToken.RefreshToken1, options);
+            Response.Cookies.Append("refreshToken", refreshToken.RefreshToken, options);
 
             return Ok(new APIReponse
             {
@@ -180,7 +180,7 @@ namespace CoffeeHouseAPI.Controllers
 
             var builder = WebApplication.CreateBuilder();
             string frontEndDomain = builder.Configuration["FrontendDomain"] ?? string.Empty;
-            string urlVerify = frontEndDomain + "/Verify?token=" + newOtp;
+            string urlVerify = frontEndDomain + "/Verify?query=" + newOtp;
             
             account = new Account
             {
@@ -215,7 +215,7 @@ namespace CoffeeHouseAPI.Controllers
                 return BadRequest(new APIReponse
                 {
                     IsSuccess = false,
-                    Message = "Account with this email is not existed.",
+                    Message = "Verify link is not existed.",
                     Status = (int)StatusCodes.Status400BadRequest,
                 });
             }
@@ -225,7 +225,7 @@ namespace CoffeeHouseAPI.Controllers
                 return BadRequest(new APIReponse
                 {
                     IsSuccess = false,
-                    Message = "Account is verified",
+                    Message = "Account was verified.",
                     Status = (int)StatusCodes.Status400BadRequest,
                 });
             }
@@ -391,13 +391,13 @@ namespace CoffeeHouseAPI.Controllers
 
             if (rfsTokenFromHttp == null) return UnauthorizedResponse();
 
-            var refreshToken = await _context.RefreshTokens.Where(x => x.RefreshToken1 == rfsTokenFromHttp).FirstOrDefaultAsync();
+            var refreshToken = await _context.RefreshTokens1.Where(x => x.RefreshToken == rfsTokenFromHttp).FirstOrDefaultAsync();
 
             if (refreshToken == null) return UnauthorizedResponse();
 
             if (refreshToken.Revoke != null) return UnauthorizedResponse();
 
-            var accountFromRefreshToken = _context.Accounts.Where(x => x.RefreshToken == refreshToken.RefreshToken1).FirstOrDefault();
+            var accountFromRefreshToken = _context.Accounts.Where(x => x.RefreshToken == refreshToken.RefreshToken).FirstOrDefault();
 
             if (accountFromRefreshToken == null) return UnauthorizedResponse();
 
@@ -410,11 +410,11 @@ namespace CoffeeHouseAPI.Controllers
             var newToken = CreateToken(customer, account);
 
             RefreshTokenDTO refreshTokenDTO = GenerateRefreshToken();
-            refreshToken.RefreshToken1 = refreshTokenDTO.RefreshToken1;
+            refreshToken.RefreshToken = refreshTokenDTO.RefreshToken1;
             refreshToken.Expire = refreshTokenDTO.Expire;
             refreshToken.Created = refreshTokenDTO.Created;
             this.SaveChanges(_context);
-            account.RefreshToken = refreshToken.RefreshToken1;
+            account.RefreshToken = refreshToken.RefreshToken;
             this.SaveChanges(_context);
 
             return Ok(new APIReponse
