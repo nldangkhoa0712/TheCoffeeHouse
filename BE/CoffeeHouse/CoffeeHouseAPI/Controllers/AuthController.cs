@@ -75,7 +75,7 @@ namespace CoffeeHouseAPI.Controllers
                 {
                     account.BlockExpire = DateTime.Now.AddMinutes(account.LoginFailed);
                 }
-                this.SaveChanges(_context);
+                await this.SaveChanges(_context);
                 return BadRequest(new APIReponse
                 {
                     IsSuccess = false,
@@ -110,21 +110,21 @@ namespace CoffeeHouseAPI.Controllers
 
             if (account.RefreshToken != null)
             {
-                var oldRfsToken = _context.RefreshTokens1.Find(account.RefreshToken);
+                var oldRfsToken = _context.RefreshTokens.Find(account.RefreshToken);
                 if (oldRfsToken != null)
                 {
                      oldRfsToken.Revoke = DateTime.Now;
-                    this.SaveChanges(_context);
+                    await this.SaveChanges(_context);
                 }
             }
 
             RefreshTokenDTO refreshTokenDTO = GenerateRefreshToken();
-            RefreshToken1 refreshToken = _mapper.Map<RefreshToken1>(refreshTokenDTO);
-            _context.RefreshTokens1.Add(refreshToken);
-            this.SaveChanges(_context);
-            account.RefreshToken = refreshToken.RefreshToken;
+            RefreshToken refreshToken = _mapper.Map<RefreshToken>(refreshTokenDTO);
+            _context.RefreshTokens.Add(refreshToken);
+            await this.SaveChanges(_context);
+            account.RefreshToken = refreshToken.RefreshToken1;
             account.LoginFailed = 0;
-            this.SaveChanges(_context);
+            await this.SaveChanges(_context);
 
             var options = new CookieOptions
             {
@@ -134,7 +134,7 @@ namespace CoffeeHouseAPI.Controllers
                 Expires = refreshToken.Expire
             };
 
-            Response.Cookies.Append("refreshToken", refreshToken.RefreshToken, options);
+            Response.Cookies.Append("refreshToken", refreshToken.RefreshToken1, options);
 
             return Ok(new APIReponse
             {
@@ -174,13 +174,13 @@ namespace CoffeeHouseAPI.Controllers
             };
 
             await _context.Customers.AddAsync(customer);
-            this.SaveChanges(_context);
+            await this.SaveChanges(_context);
 
             string newOtp = GENERATE_DATA.GenerateString(64);
 
             var builder = WebApplication.CreateBuilder();
             string frontEndDomain = builder.Configuration["FrontendDomain"] ?? string.Empty;
-            string urlVerify = frontEndDomain + "/Verify?query=" + newOtp;
+            string urlVerify = frontEndDomain + "/verify?query=" + newOtp;
             
             account = new Account
             {
@@ -192,7 +192,7 @@ namespace CoffeeHouseAPI.Controllers
             };
 
             await _context.Accounts.AddAsync(account);
-            this.SaveChanges(_context);
+            await this.SaveChanges(_context);
 
             string subject = "Xác nhận tài khoản";
             await _email.SendEmailAsync(account.Email, subject, EMAIL_TEMPLATE.SendOtpTemplate(urlVerify));
@@ -241,7 +241,7 @@ namespace CoffeeHouseAPI.Controllers
             }
 
             account.VerifyTime = DateTime.Now;
-            this.SaveChanges(_context);
+            await this.SaveChanges(_context);
 
             return Ok(new APIReponse
             {
@@ -284,7 +284,7 @@ namespace CoffeeHouseAPI.Controllers
             string urlVerify = frontEndDomain + "/Verify?token=" + newOtp;
             
             account.VerifyToken = newOtp;
-            this.SaveChanges(_context);
+            await this.SaveChanges(_context);
 
             string subject = "Xác nhận tài khoản";
             await _email.SendEmailAsync(account.Email, subject, EMAIL_TEMPLATE.SendOtpTemplate(urlVerify));
@@ -317,7 +317,7 @@ namespace CoffeeHouseAPI.Controllers
 
             account.ResetPasswordExpired = expire;
             account.ResetPasswordToken = otp;
-            this.SaveChanges(_context);
+            await this.SaveChanges(_context);
 
             string subject = "Xác nhận đổi mật khẩu";
             string message = EMAIL_TEMPLATE.SendOtpForgotPasswordTemplate(otp, expire);
@@ -368,7 +368,7 @@ namespace CoffeeHouseAPI.Controllers
 
             account.Password = request.NewPassword;
             account.BlockExpire = null;
-            this.SaveChanges(_context);
+            await this.SaveChanges(_context);
 
             return Ok(new APIReponse
             {
@@ -391,13 +391,13 @@ namespace CoffeeHouseAPI.Controllers
 
             if (rfsTokenFromHttp == null) return UnauthorizedResponse();
 
-            var refreshToken = await _context.RefreshTokens1.Where(x => x.RefreshToken == rfsTokenFromHttp).FirstOrDefaultAsync();
+            var refreshToken = await _context.RefreshTokens.Where(x => x.RefreshToken1 == rfsTokenFromHttp).FirstOrDefaultAsync();
 
             if (refreshToken == null) return UnauthorizedResponse();
 
             if (refreshToken.Revoke != null) return UnauthorizedResponse();
 
-            var accountFromRefreshToken = _context.Accounts.Where(x => x.RefreshToken == refreshToken.RefreshToken).FirstOrDefault();
+            var accountFromRefreshToken = _context.Accounts.Where(x => x.RefreshToken == refreshToken.RefreshToken1).FirstOrDefault();
 
             if (accountFromRefreshToken == null) return UnauthorizedResponse();
 
@@ -410,12 +410,12 @@ namespace CoffeeHouseAPI.Controllers
             var newToken = CreateToken(customer, account);
 
             RefreshTokenDTO refreshTokenDTO = GenerateRefreshToken();
-            refreshToken.RefreshToken = refreshTokenDTO.RefreshToken1;
+            refreshToken.RefreshToken1 = refreshTokenDTO.RefreshToken;
             refreshToken.Expire = refreshTokenDTO.Expire;
             refreshToken.Created = refreshTokenDTO.Created;
-            this.SaveChanges(_context);
-            account.RefreshToken = refreshToken.RefreshToken;
-            this.SaveChanges(_context);
+            await this.SaveChanges(_context);
+            account.RefreshToken = refreshToken.RefreshToken1;
+            await this.SaveChanges(_context);
 
             return Ok(new APIReponse
             {
@@ -477,9 +477,9 @@ namespace CoffeeHouseAPI.Controllers
 
             var refreshToken = new RefreshTokenDTO
             {
-                RefreshToken1 = rfsToken,
-                Expire = DateTime.UtcNow.AddDays(1),
-                Created = DateTime.UtcNow
+                RefreshToken = rfsToken,
+                Expire = DateTime.Now.AddDays(1),
+                Created = DateTime.Now
             };
 
             return refreshToken;

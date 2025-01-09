@@ -35,7 +35,7 @@ namespace CoffeeHouseAPI.Extensions
             // Register for database context
             services.AddDbContext<CoffeeHouseLib.Models.DbcoffeeHouseContext>(options =>
             {
-                options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
+                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
             });
         }
     }

@@ -3,28 +3,15 @@ using System.Collections.Generic;
 
 namespace CoffeeHouseLib.Models;
 
-/// <summary>
-/// Auth: Store of tokens used to refresh JWT tokens once they expire.
-/// </summary>
 public partial class RefreshToken
 {
-    public Guid? InstanceId { get; set; }
+    public string RefreshToken1 { get; set; } = null!;
 
-    public long Id { get; set; }
+    public DateTime? Expire { get; set; }
 
-    public string? Token { get; set; }
+    public DateTime? Created { get; set; }
 
-    public string? UserId { get; set; }
+    public DateTime? Revoke { get; set; }
 
-    public bool? Revoked { get; set; }
-
-    public DateTime? CreatedAt { get; set; }
-
-    public DateTime? UpdatedAt { get; set; }
-
-    public string? Parent { get; set; }
-
-    public Guid? SessionId { get; set; }
-
-    public virtual Session? Session { get; set; }
+    public virtual ICollection<Account> Accounts { get; set; } = new List<Account>();
 }

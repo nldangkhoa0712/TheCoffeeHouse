@@ -2,7 +2,7 @@
 {
     public class RefreshTokenDTO
     {
-        public string RefreshToken1 { get; set; } = null!;
+        public string RefreshToken { get; set; } = null!;
 
         public DateTime? Expire { get; set; }
 
