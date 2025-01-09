@@ -1,24 +1,52 @@
-import { Route, Routes } from "react-router-dom";
-import React from "react";
-import { publicRoute, RouteProps } from "./routes";
+import { Home } from "@mui/icons-material";
+import { Navigate, Outlet, useRoutes } from "react-router-dom";
+import MainLayout from "./components/mainlayout";
 import "./index.scss";
-
-const routeRouter = (routeList: RouteProps[]) => {
-  return routeList.map((item: RouteProps, index: number) => {
-    const Page = item.component;
-    return (
-      <Route key={index} element={<Page />} path={item.path}>
-        {item.children && routeRouter(item.children)}
-      </Route>
-    );
-  });
-};
-
+import Auth from "./pages/auth";
+import Content from "./pages/content";
+import VerifySuccess from "./pages/verifySuccess";
+import { storageService } from "./storage";
+import { Toaster } from "react-hot-toast";
 function App() {
+  const accessToken = storageService.getAccessToken();
+  const ProtectedRoutes = () => {
+    return accessToken ? <Outlet /> : <Navigate to={"/auth"} />;
+  };
+
+  const PrejectedRoutes = () => {
+    return !accessToken ? <Outlet /> : <Navigate to={"/auth"} />;
+  };
+
+  const routeElement = useRoutes([
+    {
+      path: "",
+      element: <ProtectedRoutes />,
+      children: [
+        {
+          path: "/",
+          element: <MainLayout />,
+          children: [
+            {
+              path: "home",
+              element: <Home />,
+            },
+            { path: "content", element: <Content /> },
+          ],
+        },
+      ],
+    },
+
+    { path: "/auth", element: <Auth /> },
+    {
+      path: "/verify",
+      element: <VerifySuccess />,
+    },
+  ]);
   return (
-    <div className="App">
-      <Routes>{routeRouter(publicRoute)}</Routes>
-    </div>
+    <>
+      {routeElement}
+      <Toaster />
+    </>
   );
 }
 

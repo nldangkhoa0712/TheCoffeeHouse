@@ -4,11 +4,11 @@ import { Controller, useForm } from "react-hook-form";
 import { useGetOTP } from "../../hooks/auth.api";
 import TextInputForm from "../../layouts/TextInputForm";
 
-type VerifyProps = {
+type ForgotPasswordProps = {
   email: string;
 };
 
-const Verify = ({ email }: VerifyProps) => {
+const ForgotPassword = () => {
   const [count, setCount] = useState<number>(30);
   const timeRemainRef = useRef<number>(undefined);
   const getOTP = useGetOTP();
@@ -42,8 +42,8 @@ const Verify = ({ email }: VerifyProps) => {
     console.log(data);
   };
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="form form-verify">
-      <h1>Verify OTP</h1>
+    <form onSubmit={handleSubmit(onSubmit)} className="form form-forgot">
+      <h1>Forgot Password</h1>
       <Controller
         control={control}
         name="otp"
@@ -64,7 +64,7 @@ const Verify = ({ email }: VerifyProps) => {
         <button
           onClick={() => {
             handleStartRemain();
-            getOTP.mutate(email);
+            // getOTP.mutate(email);
           }}
         >
           Resend OTP
@@ -78,4 +78,4 @@ const Verify = ({ email }: VerifyProps) => {
   );
 };
 
-export default Verify;
+export default ForgotPassword;

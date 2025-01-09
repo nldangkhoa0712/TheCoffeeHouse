@@ -1,3 +1,4 @@
+import { AxiosError } from "axios"
 import { axiosCallAPI } from "../../axios/axiosCallAPI"
 
 export interface ResponseModel<T = any> {
@@ -17,6 +18,7 @@ const callAPI = async <T>(url: string, resquestData: object | undefined | string
         })
         return response.data
     } catch (error) {
+
         throw error
     }
 }

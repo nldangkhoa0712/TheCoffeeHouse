@@ -21,6 +21,10 @@
   right: 50%;
 }
 
+.form-box.forgot .form {
+  right: 50%;
+}
+
 .btn-submit {
   width: 80%;
   height: 40px;

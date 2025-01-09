@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Button, CircularProgress } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { Controller, useForm } from "react-hook-form";
@@ -9,7 +9,7 @@ import { RegisterModel } from "../../models/auth.model";
 import { handleFormatDate } from "../../utils/handleFormatDate";
 
 const Register = () => {
-  const { mutate: mutateRegister } = useRegister();
+  const { mutate: mutateRegister, isLoading } = useRegister();
   const { handleSubmit, control } = useForm<RegisterModel>({
     defaultValues: {
       fullName: "",
@@ -26,13 +26,8 @@ const Register = () => {
       dateOfBirth: handleFormatDate(data.dateOfBirth),
     };
     mutateRegister(payload, {
-      onSuccess(resp) {
-        // console.log(resp);
-        return resp;
-      },
+      onSuccess(resp) {},
     });
-
-    // if (ErrorRegister)
   };
   return (
     <form className="form form-register" onSubmit={handleSubmit(onSubmit)}>
@@ -66,11 +61,6 @@ const Register = () => {
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePickerForm value={field.value} handleChange={field.onChange} />
           </LocalizationProvider>
-          // <TextInputForm
-          //   label="Date of Birth"
-          //   value={field.value}
-          //   onChange={field.onChange}
-          // />
         )}
       ></Controller>
       <Controller
@@ -97,7 +87,11 @@ const Register = () => {
       ></Controller>
 
       <Button className="btn-submit" type="submit">
-        Register
+        {isLoading ? (
+          <CircularProgress size={20} style={{ color: "white" }} />
+        ) : (
+          "Register"
+        )}
       </Button>
       <p style={{ textDecoration: "underline" }}>Create Account or Gmail</p>
     </form>
