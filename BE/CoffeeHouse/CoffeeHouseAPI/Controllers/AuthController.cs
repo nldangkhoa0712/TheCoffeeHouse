@@ -48,7 +48,7 @@ namespace CoffeeHouseAPI.Controllers
 
             if (account == null)
             {
-                return BadRequest(new APIReponse
+                return BadRequest(new APIResponseBase
                 {
                     IsSuccess = false,
                     Message = "Email is not existed",
@@ -56,10 +56,10 @@ namespace CoffeeHouseAPI.Controllers
                 });
             }
 
-            if (account.BlockExpire != null && account.BlockExpire > DateTime.Now)
+            if (account.BlockExpire != null && account.BlockExpire > DateTime.UtcNow)
             {
 
-                return BadRequest(new APIReponse
+                return BadRequest(new APIResponseBase
                 {
                     IsSuccess = false,
                     Message = $"Your account is blocked. Please try after {((DateTime)account.BlockExpire).ToString("HH:mm:ss")}.",
@@ -73,10 +73,10 @@ namespace CoffeeHouseAPI.Controllers
                 account.LoginFailed += 1;
                 if (account.LoginFailed % 5 == 0)
                 {
-                    account.BlockExpire = DateTime.Now.AddMinutes(account.LoginFailed);
+                    account.BlockExpire = DateTime.UtcNow.AddMinutes(account.LoginFailed);
                 }
                 await this.SaveChanges(_context);
-                return BadRequest(new APIReponse
+                return BadRequest(new APIResponseBase
                 {
                     IsSuccess = false,
                     Message = "Login failed, please try again",
@@ -86,7 +86,7 @@ namespace CoffeeHouseAPI.Controllers
 
             if (account.VerifyTime == null)
             {
-                return BadRequest(new APIReponse
+                return BadRequest(new APIResponseBase
                 {
                     IsSuccess = false,
                     Message = "Account is not verified.",
@@ -97,7 +97,7 @@ namespace CoffeeHouseAPI.Controllers
             var customer = _context.Customers.Find(account.CustomerId);
             if (customer == null)
             {
-                return BadRequest(new APIReponse
+                return BadRequest(new APIResponseBase
                 {
                     IsSuccess = false,
                     Message = "Login failed, please try again",
@@ -113,7 +113,7 @@ namespace CoffeeHouseAPI.Controllers
                 var oldRfsToken = _context.RefreshTokens.Find(account.RefreshToken);
                 if (oldRfsToken != null)
                 {
-                     oldRfsToken.Revoke = DateTime.Now;
+                     oldRfsToken.Revoke = DateTime.UtcNow;
                     await this.SaveChanges(_context);
                 }
             }
@@ -136,7 +136,7 @@ namespace CoffeeHouseAPI.Controllers
 
             Response.Cookies.Append("refreshToken", refreshToken.RefreshToken1, options);
 
-            return Ok(new APIReponse
+            return Ok(new APIResponseBase
             {
                 IsSuccess = true,
                 Message = "Login success",
@@ -157,7 +157,7 @@ namespace CoffeeHouseAPI.Controllers
 
             if (account != null)
             {
-                return BadRequest(new APIReponse
+                return BadRequest(new APIResponseBase
                 {
                     IsSuccess = false,
                     Message = "Account with this email is existed",
@@ -197,7 +197,7 @@ namespace CoffeeHouseAPI.Controllers
             string subject = "Xác nhận tài khoản";
             await _email.SendEmailAsync(account.Email, subject, EMAIL_TEMPLATE.SendOtpTemplate(urlVerify));
 
-            return Ok(new APIReponse
+            return Ok(new APIResponseBase
             {
                 IsSuccess = true,
                 Message = "Register account success. Please check your email to get OTP.",
@@ -212,7 +212,7 @@ namespace CoffeeHouseAPI.Controllers
             var account = await _context.Accounts.Where(x => x.VerifyToken == request.Otp).FirstOrDefaultAsync();
             if (account == null)
             {
-                return BadRequest(new APIReponse
+                return BadRequest(new APIResponseBase
                 {
                     IsSuccess = false,
                     Message = "Verify link is not existed.",
@@ -222,7 +222,7 @@ namespace CoffeeHouseAPI.Controllers
 
             if (account.VerifyTime != null)
             {
-                return BadRequest(new APIReponse
+                return BadRequest(new APIResponseBase
                 {
                     IsSuccess = false,
                     Message = "Account was verified.",
@@ -232,7 +232,7 @@ namespace CoffeeHouseAPI.Controllers
 
             if (request.Otp != account.VerifyToken)
             {
-                return BadRequest(new APIReponse
+                return BadRequest(new APIResponseBase
                 {
                     IsSuccess = false,
                     Message = "Wrong OTP",
@@ -240,10 +240,10 @@ namespace CoffeeHouseAPI.Controllers
                 });
             }
 
-            account.VerifyTime = DateTime.Now;
+            account.VerifyTime = DateTime.UtcNow;
             await this.SaveChanges(_context);
 
-            return Ok(new APIReponse
+            return Ok(new APIResponseBase
             {
                 IsSuccess = true,
                 Message = "Verify account success.",
@@ -259,7 +259,7 @@ namespace CoffeeHouseAPI.Controllers
             var account = await _context.Accounts.Where(x => x.Email == email).FirstOrDefaultAsync();
             if (account == null)
             {
-                return BadRequest(new APIReponse
+                return BadRequest(new APIResponseBase
                 {
                     IsSuccess = false,
                     Message = "Account with this email is not existed.",
@@ -269,7 +269,7 @@ namespace CoffeeHouseAPI.Controllers
 
             if (account.VerifyTime != null)
             {
-                return BadRequest(new APIReponse
+                return BadRequest(new APIResponseBase
                 {
                     IsSuccess = false,
                     Message = "Account is verified",
@@ -289,7 +289,7 @@ namespace CoffeeHouseAPI.Controllers
             string subject = "Xác nhận tài khoản";
             await _email.SendEmailAsync(account.Email, subject, EMAIL_TEMPLATE.SendOtpTemplate(urlVerify));
 
-            return Ok(new APIReponse
+            return Ok(new APIResponseBase
             {
                 IsSuccess = true,
                 Message = "Your OTP was sent to your email.",
@@ -304,16 +304,16 @@ namespace CoffeeHouseAPI.Controllers
             var account = await _context.Accounts.Where(x => x.Email == email).FirstOrDefaultAsync();
             if (account == null)
             {
-                return BadRequest(new APIReponse
+                return BadRequest(new APIResponseBase
                 {
                     IsSuccess = false,
-                    Message = "Account with this email is not existed.",
+                    Message = $"Account with {email} is not existed.",
                     Status = (int)StatusCodes.Status400BadRequest,
                 });
             }
 
             string otp = GENERATE_DATA.GenerateNumber(6);
-            DateTime expire = DateTime.Now.AddMinutes(5);
+            DateTime expire = DateTime.UtcNow.AddMinutes(5);
 
             account.ResetPasswordExpired = expire;
             account.ResetPasswordToken = otp;
@@ -323,10 +323,10 @@ namespace CoffeeHouseAPI.Controllers
             string message = EMAIL_TEMPLATE.SendOtpForgotPasswordTemplate(otp, expire);
             await _email.SendEmailAsync(email, subject, message);
 
-            return Ok(new APIReponse
+            return Ok(new APIResponseBase
             {
                 IsSuccess = true,
-                Message = "Your OTP was sent to your email.",
+                Message = $"Your OTP was sent to your {email}.",
                 Status = (int)StatusCodes.Status200OK,
             });
         }
@@ -338,7 +338,7 @@ namespace CoffeeHouseAPI.Controllers
             var account = await _context.Accounts.Where(x => x.Email == request.Email).FirstOrDefaultAsync();
             if (account == null)
             {
-                return BadRequest(new APIReponse
+                return BadRequest(new APIResponseBase
                 {
                     IsSuccess = false,
                     Message = "Account with this email is not existed.",
@@ -348,7 +348,7 @@ namespace CoffeeHouseAPI.Controllers
 
             if (account.ResetPasswordToken != request.Otp)
             {
-                return BadRequest(new APIReponse
+                return BadRequest(new APIResponseBase
                 {
                     IsSuccess = false,
                     Message = "Wrong OTP",
@@ -356,9 +356,9 @@ namespace CoffeeHouseAPI.Controllers
                 });
             }
 
-            if (account.ResetPasswordExpired < DateTime.Now)
+            if (account.ResetPasswordExpired < DateTime.UtcNow)
             {
-                return BadRequest(new APIReponse
+                return BadRequest(new APIResponseBase
                 {
                     IsSuccess = false,
                     Message = "OTP is expired",
@@ -370,7 +370,7 @@ namespace CoffeeHouseAPI.Controllers
             account.BlockExpire = null;
             await this.SaveChanges(_context);
 
-            return Ok(new APIReponse
+            return Ok(new APIResponseBase
             {
                 IsSuccess = true,
                 Message = "Your password was change success",
@@ -410,14 +410,14 @@ namespace CoffeeHouseAPI.Controllers
             var newToken = CreateToken(customer, account);
 
             RefreshTokenDTO refreshTokenDTO = GenerateRefreshToken();
-            refreshToken.RefreshToken1 = refreshTokenDTO.RefreshToken;
+            refreshToken.RefreshToken1 = refreshTokenDTO.RefreshToken1;
             refreshToken.Expire = refreshTokenDTO.Expire;
             refreshToken.Created = refreshTokenDTO.Created;
             await this.SaveChanges(_context);
             account.RefreshToken = refreshToken.RefreshToken1;
             await this.SaveChanges(_context);
 
-            return Ok(new APIReponse
+            return Ok(new APIResponseBase
             {
                 IsSuccess = true,
                 Message = "Get new token success",
@@ -427,7 +427,7 @@ namespace CoffeeHouseAPI.Controllers
         }
         private ObjectResult UnauthorizedResponse()
         {
-            return Unauthorized(new APIReponse
+            return Unauthorized(new APIResponseBase
             {
                 IsSuccess = false,
                 Message = "Login timeout.",
@@ -450,7 +450,7 @@ namespace CoffeeHouseAPI.Controllers
                     new Claim(ClaimTypes.Name, customer.FullName),
                     new Claim(ClaimTypes.Email, account.Email)
                 }),
-                Expires = DateTime.Now.AddMinutes(Convert.ToDouble(builder.Configuration["Jwt:Expires"])),
+                Expires = DateTime.UtcNow.AddMinutes(Convert.ToDouble(builder.Configuration["Jwt:Expires"])),
                 Issuer = issuer,
                 Audience = audience,
                 SigningCredentials = new SigningCredentials
@@ -477,9 +477,9 @@ namespace CoffeeHouseAPI.Controllers
 
             var refreshToken = new RefreshTokenDTO
             {
-                RefreshToken = rfsToken,
-                Expire = DateTime.Now.AddDays(1),
-                Created = DateTime.Now
+                RefreshToken1 = rfsToken,
+                Expire = DateTime.UtcNow.AddDays(1),
+                Created = DateTime.UtcNow
             };
 
             return refreshToken;
@@ -517,7 +517,7 @@ namespace CoffeeHouseAPI.Controllers
                 var name = claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
                 var email = claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
 
-                account = _context.Accounts.Where(x => x.Email == email && (x.BlockExpire < DateTime.Now || x.BlockExpire == null)).FirstOrDefault();
+                account = _context.Accounts.Where(x => x.Email == email && (x.BlockExpire < DateTime.UtcNow || x.BlockExpire == null)).FirstOrDefault();
                 customer = _context.Customers.Find(account?.CustomerId ?? -1);
 
             }
@@ -528,9 +528,9 @@ namespace CoffeeHouseAPI.Controllers
             }
         }
 
-        private APIReponse ReturnAPIResponse(string message, object value, int StatusCode, bool isSuccess = false)
+        private APIResponseBase ReturnAPIResponse(string message, object value, int StatusCode, bool isSuccess = false)
         {
-            return new APIReponse
+            return new APIResponseBase
             {
                 Message = message,
                 Value = value,
