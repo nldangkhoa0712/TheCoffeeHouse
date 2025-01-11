@@ -27,7 +27,8 @@ namespace CoffeeHouseAPI.Controllers
         {
             var category = await _context.Categories.ToListAsync();
             List<CategoryDTO> categoryDTO = _mapper.Map<List<CategoryDTO>>(category);
-            return Ok(new APIReponse {
+            return Ok(new APIResponseBase
+            {
                 Status = (int)StatusCodes.Status200OK,
                 Value = categoryDTO,
                 Message = "Get cateogry success",
@@ -42,7 +43,7 @@ namespace CoffeeHouseAPI.Controllers
             var category = await _context.Categories.FindAsync(id);
             if (category == null)
             {
-                return BadRequest(new APIReponse
+                return BadRequest(new APIResponseBase
                 {
                     Status = (int)StatusCodes.Status400BadRequest,
                     Message = "Get cateogry failed",
@@ -50,7 +51,7 @@ namespace CoffeeHouseAPI.Controllers
                 });
             }
             CategoryDTO categoryDTO = _mapper.Map<CategoryDTO>(category);
-            return Ok(new APIReponse
+            return Ok(new APIResponseBase
             {
                 Status = (int)StatusCodes.Status200OK,
                 Value = categoryDTO,
@@ -62,13 +63,13 @@ namespace CoffeeHouseAPI.Controllers
         [HttpPut]
         [Route("UpdateCategory")]
 
-        public async Task<IActionResult> UpdateCategory([FromQuery] int id, [FromBody] CategoryDTO categoryDTO)
+        public async Task<IActionResult> UpdateCategory([FromQuery] int id, [FromBody] CategoryRequestDTO categoryDTO)
         {
             var category = await _context.Categories.FindAsync(id);
             if (category == null)
             {
-                return BadRequest(new APIReponse
-                   {
+                return BadRequest(new APIResponseBase
+                {
                     Status = (int)StatusCodes.Status400BadRequest,
                     Value = null,
                     Message = "Update Failed",
@@ -78,9 +79,9 @@ namespace CoffeeHouseAPI.Controllers
 
             category.IdParent = categoryDTO.IdParent;
             category.CategoryName = categoryDTO.CategoryName;
-            this.SaveChanges(_context);
+            await this.SaveChanges(_context);
 
-            return Ok(new APIReponse
+            return Ok(new APIResponseBase
             {
                 Status = (int)StatusCodes.Status200OK,
                 Value = category,
