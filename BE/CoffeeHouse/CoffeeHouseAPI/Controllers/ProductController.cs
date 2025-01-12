@@ -34,9 +34,13 @@ namespace CoffeeHouseAPI.Controllers
 
         [HttpGet]
         [Route("GetProduct")]
-        public async Task<IActionResult> GetProduct()
+        public async Task<IActionResult> GetProduct([FromQuery] int? idCateogry)
         {
             var categories = await _context.Categories.Include(x => x.Products).Where(x => x.IdParent != null && x.Products.Count != 0).ToListAsync();
+            if (idCateogry == null) {
+                categories = categories.Where(x => x.Id == idCateogry).ToList();
+            }
+
             List<ProductByCategoryDTO> products = new List<ProductByCategoryDTO>();
             foreach (var category in categories)
             {
