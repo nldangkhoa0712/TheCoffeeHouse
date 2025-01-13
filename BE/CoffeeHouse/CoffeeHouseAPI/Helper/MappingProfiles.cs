@@ -5,8 +5,10 @@ using CoffeeHouseAPI.DTOs.Category;
 using CoffeeHouseAPI.DTOs.Image;
 using CoffeeHouseAPI.DTOs.Product;
 using CoffeeHouseAPI.DTOs.ProductSize;
+using CoffeeHouseAPI.DTOs.Topping;
 using CoffeeHouseAPI.Helper;
 using CoffeeHouseLib.Models;
+using FirebaseAdmin.Messaging;
 
 namespace OrderService.Helper
 {
@@ -44,6 +46,9 @@ namespace OrderService.Helper
 
             CreateMap<ProductSize, ProductSizeRequestDTO>();
             CreateMap<ProductSizeRequestDTO, ProductSize>();
+
+            CreateMap<ToppingDTO, Topping>();
+            CreateMap<Topping, ToppingDTO>();
         }
     }
 }
