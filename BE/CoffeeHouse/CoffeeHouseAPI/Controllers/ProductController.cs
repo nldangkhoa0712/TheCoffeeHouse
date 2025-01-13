@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Azure.Core;
 using CoffeeHouseAPI.DTOs.APIPayload;
 using CoffeeHouseAPI.DTOs.Category;
 using CoffeeHouseAPI.DTOs.Image;
@@ -12,6 +13,8 @@ using Google.Cloud.Storage.V1;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.Internal;
+using System.Collections.Generic;
 
 namespace CoffeeHouseAPI.Controllers
 {
@@ -37,13 +40,12 @@ namespace CoffeeHouseAPI.Controllers
         public async Task<IActionResult> GetProduct([FromQuery] int? idCateogry)
         {
             var categories = await _context.Categories.Include(x => x.Products).Where(x => x.IdParent != null && x.Products.Count != 0).ToListAsync();
-            if (idCateogry == null) {
+            if (idCateogry != null) {
                 categories = categories.Where(x => x.Id == idCateogry).ToList();
             }
 
             List<ProductByCategoryDTO> products = new List<ProductByCategoryDTO>();
-            foreach (var category in categories)
-            {
+            foreach (var category in categories) {
                 ProductByCategoryDTO productResponseDTO = new ProductByCategoryDTO();
                 productResponseDTO.Category = _mapper.Map<CategoryResponseDTO>(category);
                 var productByCateogry = _context.Products.Include(x => x.Images.Take(1)).Where(x => x.CategoryId == category.Id).ToList();
@@ -58,35 +60,24 @@ namespace CoffeeHouseAPI.Controllers
         public async Task<IActionResult> AddProduct([FromBody] ProductRequestDTO request)
         {
             if (request.Images.Count == 0)
-                return BadRequest(new APIResponseBase
-                {
+                return BadRequest(new APIResponseBase {
                     IsSuccess = false,
                     Message = "Insert at least one images",
                     Status = (int)StatusCodes.Status400BadRequest
                 });
 
             if (request.Sizes.Count == 0)
-                return BadRequest(new APIResponseBase
-                {
+                return BadRequest(new APIResponseBase {
                     IsSuccess = false,
                     Message = "Insert at least one sizes",
                     Status = (int)StatusCodes.Status400BadRequest
                 });
 
-            ProductDTO productDTO = new ProductDTO();
-            productDTO.ProductName = request.ProductName;
-            productDTO.Description = request.Description;
-            productDTO.CategoryId = request.CategoryId;
-            productDTO.IsValid = true;
-
-            var newProduct = _mapper.Map<Product>(productDTO);
+            var newProduct = _mapper.Map<Product>(request);
+            newProduct.IsValid = true;
 
             // Add image to firebase
-            List<Image> images = _mapper.Map<List<Image>>(request.Images);
-            for (int i = 0; i< request.Images.Count; i++) {
-                string url = await _firebaseService.UploadImageAsync(request.Images[i]);
-                images[i].FirebaseImage = url;
-            }
+            List<Image> images = await AddImageToFirebase(request.Images);  
 
             // Add image to database
             _context.Images.AddRange(images);
@@ -99,18 +90,15 @@ namespace CoffeeHouseAPI.Controllers
 
             // Add product size
             List<ProductSize> productSizes = _mapper.Map<List<ProductSize>>(request.Sizes);
-            foreach (var productSize in productSizes)
-            {
+            foreach (var productSize in productSizes) {
                 productSize.ProductId = newProduct.Id;
             }
             _context.ProductSizes.AddRange(productSizes);
             await this.SaveChanges(_context);
 
-            productDTO = _mapper.Map<ProductDTO>(newProduct);
-            productDTO.Images = new List<ImageRequestDTO>();
-            
-            return Ok(new APIResponseBase
-            {
+            ProductResponseDTO productDTO = _mapper.Map<ProductResponseDTO>(newProduct);
+
+            return Ok(new APIResponseBase {
                 IsSuccess = true,
                 Status = (int)StatusCodes.Status200OK,
                 Message = "Add product success",
@@ -118,59 +106,77 @@ namespace CoffeeHouseAPI.Controllers
             });
         }
 
+        [HttpPost]
+        [Route("UpdateProduct")]
+        public async Task<IActionResult> UpdateProduct([FromQuery] int idProduct, [FromBody] ProductRequestDTO request)
+        {
+            var product = await _context.Products.Include(x => x.Images).FirstOrDefaultAsync(x => x.Id == idProduct);
+            if (product == null) {
+                return BadRequest(new APIResponseBase {
+                    IsSuccess = false,
+                    Status = (int)StatusCodes.Status400BadRequest,
+                    Message = "Product is not existed"
+                });
+            }
 
-        //[HttpGet]
-        //[Route("GetProduct")]
-        //public IActionResult GetProduct([FromQuery] int? categoryId)
-        //{
-        //    Category? category = _context.Categories.Where(x => x.Id == categoryId).FirstOrDefault() ?? null ;
-        //    if (category == null)
-        //    {
-        //        var product = _context.Products.Include(x => x.Category).Where(x => x.IsValid).ToList();
-        //        List<ProductDTO> productDTO = _mapper.Map<List<ProductDTO>>(product);
-        //        if (product.Count == 0)
-        //        {
-        //            return NotFound(new APIResponseBase
-        //            {
-        //                IsSuccess = true,
-        //                Status = (int)StatusCodes.Status404NotFound,
-        //                Message = GENERATE_DATA.API_ACTION_RESPONSE(false, API_ACTION.GET),
-        //                Value = productDTO
-        //            });
-        //        }
+            // Add image to firebase
+            List<Image> images = await AddImageToFirebase(request.Images);
 
-        //        return Ok(new APIResponseBase
-        //        {
-        //            IsSuccess = true,
-        //            Status = (int)StatusCodes.Status200OK,
-        //            Message = GENERATE_DATA.API_ACTION_RESPONSE(true, API_ACTION.GET),
-        //            Value = productDTO
-        //        });
-        //    }
-        //    else
-        //    {
-        //        var product = _context.Products.Include(x => x.Category).Where(x => x.IsValid && x.CategoryId == categoryId).ToList();
-        //        List<ProductDTO> productDTO = _mapper.Map<List<ProductDTO>>(product);
-        //        if (product.Count == 0)
-        //        {
-        //            return NotFound(new APIResponseBase
-        //            {
-        //                IsSuccess = true,
-        //                Status = (int)StatusCodes.Status404NotFound,
-        //                Message = GENERATE_DATA.API_ACTION_RESPONSE(false, API_ACTION.GET),
-        //                Value = productDTO
-        //            });
-        //        }
+            // Add new image to database
+            _context.Images.AddRange(images);
+            await this.SaveChanges(_context);
 
-        //        return Ok(new APIResponseBase
-        //        {
-        //            IsSuccess = true,
-        //            Status = (int)StatusCodes.Status200OK,
-        //            Message = GENERATE_DATA.API_ACTION_RESPONSE(true, API_ACTION.GET),
-        //            Value = productDTO
-        //        });
-        //    }
-        //}
+            // Remove old product size
+            var oldProductSizes = _context.ProductSizes.Where(x => x.ProductId == product.Id).ToList();
+            foreach (var oldProductSize in oldProductSizes) {
+                oldProductSize.IsValid = false;
+            }
+            await this.SaveChanges(_context);
 
+            // Add new product size
+            List<ProductSize> newProductSizes = _mapper.Map<List<ProductSize>>(request.Sizes);
+            foreach (var newProductSize in newProductSizes) {
+                newProductSize.ProductId = product.Id;
+                newProductSize.IsValid = true;
+            }
+            _context.ProductSizes.AddRange(newProductSizes);
+            await this.SaveChanges(_context);
+
+            // Remove old product image
+            product.Images.Clear();
+            await this.SaveChanges(_context);
+
+            // Add new product image
+            product.Images = images;
+
+            // Update product info
+            #region Set value
+            product.ProductName = request.ProductName;
+            product.CategoryId = request.CategoryId;
+            product.Description = request.Description;
+            product.IsValid = request.IsValid;
+            #endregion
+            await this.SaveChanges(_context);
+
+            var productDTO = _mapper.Map<ProductResponseDTO>(product);
+
+            await this.SaveChanges(_context);
+            return Ok(new APIResponseBase {
+                Status = (int)StatusCodes.Status200OK,
+                Message = GENERATE_DATA.API_ACTION_RESPONSE(true, API_ACTION.PUT),
+                Value = productDTO
+            });
+        }
+
+        private async Task<List<Image>> AddImageToFirebase(List<ImageRequestDTO> imageRequestDTO)
+        {
+            List<Image> images = _mapper.Map<List<Image>>(imageRequestDTO);
+            for (int i = 0; i < imageRequestDTO.Count; i++) {
+                string url = await _firebaseService.UploadImageAsync(imageRequestDTO[i]);
+                images[i].FirebaseImage = url;
+            }
+
+            return images;
+        }
     }
 }

@@ -5,7 +5,7 @@ namespace CoffeeHouseAPI.DTOs.Product
 {
     public class ProductByCategoryDTO
     {
-        public CategoryDTO Category { get; set; } = null!;
+        public CategoryResponseDTO Category { get; set; } = null!;
         public List<ProductResponseDTO> Products { get; set; } = null!;
 
     }

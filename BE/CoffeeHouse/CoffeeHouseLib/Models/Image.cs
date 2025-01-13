@@ -11,7 +11,7 @@ public partial class Image
 
     public string ImageType { get; set; } = null!;
 
-    public byte[] Content { get; set; } = null!;
+    public byte[]? Content { get; set; }
 
     public int ImageClassId { get; set; }
 

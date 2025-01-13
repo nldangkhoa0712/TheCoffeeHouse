@@ -21,7 +21,7 @@ public partial class Product
 
     public virtual ICollection<ProductSize> ProductSizes { get; set; } = new List<ProductSize>();
 
-    public virtual ProductTopping? ProductTopping { get; set; }
-
     public virtual ICollection<Image> Images { get; set; } = new List<Image>();
+
+    public virtual ICollection<Topping> Toppings { get; set; } = new List<Topping>();
 }

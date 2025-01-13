@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using CoffeeHouseAPI.DTOs.APIPayload;
 using CoffeeHouseAPI.DTOs.Category;
+using CoffeeHouseAPI.Enums;
+using CoffeeHouseAPI.Helper;
 using CoffeeHouseLib.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -26,7 +28,7 @@ namespace CoffeeHouseAPI.Controllers
         public async Task<IActionResult> GetCateogry()
         {
             var category = await _context.Categories.ToListAsync();
-            List<CategoryDTO> categoryDTO = _mapper.Map<List<CategoryDTO>>(category);
+            List<CategoryResponseDTO> categoryDTO = _mapper.Map<List<CategoryResponseDTO>>(category);
             return Ok(new APIResponseBase
             {
                 Status = (int)StatusCodes.Status200OK,
@@ -50,7 +52,7 @@ namespace CoffeeHouseAPI.Controllers
                     IsSuccess = false
                 });
             }
-            CategoryDTO categoryDTO = _mapper.Map<CategoryDTO>(category);
+            CategoryResponseDTO categoryDTO = _mapper.Map<CategoryResponseDTO>(category);
             return Ok(new APIResponseBase
             {
                 Status = (int)StatusCodes.Status200OK,
@@ -62,7 +64,6 @@ namespace CoffeeHouseAPI.Controllers
 
         [HttpPut]
         [Route("UpdateCategory")]
-
         public async Task<IActionResult> UpdateCategory([FromQuery] int id, [FromBody] CategoryRequestDTO categoryDTO)
         {
             var category = await _context.Categories.FindAsync(id);
@@ -81,11 +82,13 @@ namespace CoffeeHouseAPI.Controllers
             category.CategoryName = categoryDTO.CategoryName;
             await this.SaveChanges(_context);
 
+            var categoryResponseDTO  = _mapper.Map<CategoryResponseDTO>(category);
+
             return Ok(new APIResponseBase
             {
                 Status = (int)StatusCodes.Status200OK,
-                Value = category,
-                Message = "Update success",
+                Value = categoryResponseDTO,
+                Message = GENERATE_DATA.API_ACTION_RESPONSE(true, API_ACTION.PUT),
                 IsSuccess = true
             });
         }
