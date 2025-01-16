@@ -16,3 +16,11 @@ export const useGetOTP = () => {
 export const useVerify = () => {
   return useMutation(AuthService.verify);
 };
+
+export const useForgotPassword = () => {
+  return useMutation(AuthService.forgotPassword);
+};
+
+export const useSetPassword = () => {
+  return useMutation(AuthService.setNewPassword);
+};

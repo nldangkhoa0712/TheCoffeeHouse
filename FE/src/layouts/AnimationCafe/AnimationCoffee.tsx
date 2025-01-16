@@ -3,7 +3,7 @@ import "./index.css";
 
 const AnimationCoffee = () => {
   return (
-    <div className="container">
+    <div className="container-animation">
       <div className="row beans" />
       <div className="row grinder" />
       <div className="row grinder_bottom" />

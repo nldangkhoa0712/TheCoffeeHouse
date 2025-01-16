@@ -1,0 +1,53 @@
+.img-small {
+  /* line-height: 18; */
+}
+
+.img {
+  width: 100%;
+  min-width: 202px;
+  height: 100%;
+  cursor: pointer;
+}
+
+.model {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000000;
+  cursor: zoom-out;
+}
+
+.model img {
+  max-width: 80%;
+  max-height: 80%;
+  border-radius: 8px;
+  animation: zoomIn 0.3s ease;
+}
+
+@keyframes zoomIn {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes zoomOut {
+  from {
+    transform: scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+}

@@ -1,15 +1,17 @@
-import { MouseEvent, useState } from "react";
+import { MouseEvent, useEffect, useState } from "react";
 import { CSSTransition } from "react-transition-group";
 import Login from "../../components/login";
 import Register from "../../components/register";
 import "./index.css";
 import ForgotPassword from "../../components/ForgotPassword";
+import { useLocation } from "react-router-dom";
 
 const Auth = () => {
   const [active, setActive] = useState<boolean>(false);
   const [forgot, setForgot] = useState<boolean>(false);
+  const { search } = useLocation();
+  const template = new URLSearchParams(search).get("template");
   const handleActive = (e: MouseEvent<HTMLButtonElement>) => {
-    console.log(e.currentTarget.name);
     if (e.currentTarget.name == "Register") {
       setActive(!active);
       return;
@@ -17,6 +19,12 @@ const Auth = () => {
     setActive(false);
     setForgot(false);
   };
+
+  useEffect(() => {
+    if (template == "register") {
+      setActive(!active);
+    }
+  }, []);
 
   return (
     <div
@@ -33,7 +41,7 @@ const Auth = () => {
         </CSSTransition>
 
         <CSSTransition in={forgot} timeout={600} unmountOnExit>
-          <ForgotPassword />
+          <ForgotPassword setForgot={setForgot} />
         </CSSTransition>
 
         <div className="toggle-box">

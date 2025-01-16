@@ -39,3 +39,9 @@ export const UserDTO = (user: UserResponse): User => {
     const { userAccount } = user
     return userAccount
 }
+
+export interface SetNewPassword {
+    otp: string
+    newPassword: string
+    email: string
+}
