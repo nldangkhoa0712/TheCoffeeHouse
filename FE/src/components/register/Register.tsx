@@ -7,6 +7,7 @@ import DatePickerForm from "../../layouts/DatePickerForm";
 import TextInputForm from "../../layouts/TextInputForm";
 import { RegisterModel } from "../../models/auth.model";
 import { handleFormatDate } from "../../utils/handleFormatDate";
+import { Helmet } from "react-helmet";
 
 const Register = () => {
   const { mutate: mutateRegister, isLoading } = useRegister();
@@ -30,71 +31,80 @@ const Register = () => {
     });
   };
   return (
-    <form className="form form-register" onSubmit={handleSubmit(onSubmit)}>
-      <h1>Register</h1>
-      <Controller
-        control={control}
-        name="fullName"
-        render={({ field }) => (
-          <TextInputForm
-            label="Full Name"
-            value={field.value}
-            onChange={field.onChange}
-          />
-        )}
-      ></Controller>
-      <Controller
-        control={control}
-        name="phone"
-        render={({ field }) => (
-          <TextInputForm
-            label="Phone"
-            value={field.value}
-            onChange={field.onChange}
-          />
-        )}
-      ></Controller>
-      <Controller
-        control={control}
-        name="dateOfBirth"
-        render={({ field }) => (
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePickerForm value={field.value} handleChange={field.onChange} />
-          </LocalizationProvider>
-        )}
-      ></Controller>
-      <Controller
-        control={control}
-        name="email"
-        render={({ field }) => (
-          <TextInputForm
-            label="Email"
-            value={field.value}
-            onChange={field.onChange}
-          />
-        )}
-      ></Controller>
-      <Controller
-        control={control}
-        name="password"
-        render={({ field }) => (
-          <TextInputForm
-            label="Password"
-            value={field.value}
-            onChange={field.onChange}
-          />
-        )}
-      ></Controller>
+    <>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>Register</title>
+      </Helmet>
+      <form className="form form-register" onSubmit={handleSubmit(onSubmit)}>
+        <h1>Register</h1>
+        <Controller
+          control={control}
+          name="fullName"
+          render={({ field }) => (
+            <TextInputForm
+              label="Full Name"
+              value={field.value}
+              onChange={field.onChange}
+            />
+          )}
+        ></Controller>
+        <Controller
+          control={control}
+          name="phone"
+          render={({ field }) => (
+            <TextInputForm
+              label="Phone"
+              value={field.value}
+              onChange={field.onChange}
+            />
+          )}
+        ></Controller>
+        <Controller
+          control={control}
+          name="dateOfBirth"
+          render={({ field }) => (
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePickerForm
+                value={field.value}
+                handleChange={field.onChange}
+              />
+            </LocalizationProvider>
+          )}
+        ></Controller>
+        <Controller
+          control={control}
+          name="email"
+          render={({ field }) => (
+            <TextInputForm
+              label="Email"
+              value={field.value}
+              onChange={field.onChange}
+            />
+          )}
+        ></Controller>
+        <Controller
+          control={control}
+          name="password"
+          render={({ field }) => (
+            <TextInputForm
+              label="Password"
+              value={field.value}
+              onChange={field.onChange}
+            />
+          )}
+        ></Controller>
 
-      <Button className="btn-submit" type="submit">
-        {isLoading ? (
-          <CircularProgress size={20} style={{ color: "white" }} />
-        ) : (
-          "Register"
-        )}
-      </Button>
-      <p style={{ textDecoration: "underline" }}>Create Account or Gmail</p>
-    </form>
+        <Button className="btn-submit" type="submit">
+          {isLoading ? (
+            <CircularProgress size={20} style={{ color: "white" }} />
+          ) : (
+            "Register"
+          )}
+        </Button>
+        <p style={{ textDecoration: "underline" }}>Create Account or Gmail</p>
+      </form>
+    </>
   );
 };
 
