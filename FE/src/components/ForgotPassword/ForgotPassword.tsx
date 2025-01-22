@@ -8,6 +8,7 @@ import {
 } from "../../hooks/auth.api";
 import TextInputForm from "../../layouts/TextInputForm";
 import toast from "react-hot-toast";
+import { Helmet } from "react-helmet";
 
 type ForgotPasswordPayload = {
   email: string;
@@ -22,7 +23,7 @@ interface ForgotPasswordProps {
 
 const ForgotPassword = ({ setForgot }: ForgotPasswordProps) => {
   const [count, setCount] = useState<number>(30);
-  const timeRemainRef = useRef<number>(undefined);
+  const timeRemainRef = useRef<any>(undefined);
   const [email, setEmail] = useState<string>("");
   const getOTP = useGetOTP();
   const MutateForgotPassword = useForgotPassword();
@@ -76,80 +77,86 @@ const ForgotPassword = ({ setForgot }: ForgotPasswordProps) => {
     });
   };
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="form form-forgot">
-      <h1>Forgot Password</h1>
+    <>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>Forgot password</title>
+      </Helmet>
+      <form onSubmit={handleSubmit(onSubmit)} className="form form-forgot">
+        <h1>Forgot Password</h1>
 
-      {email == "" && (
-        <Controller
-          control={control}
-          name="email"
-          render={({ field }) => (
-            <TextInputForm
-              label="Email"
-              value={field.value}
-              onChange={field.onChange}
+        {email == "" && (
+          <Controller
+            control={control}
+            name="email"
+            render={({ field }) => (
+              <TextInputForm
+                label="Email"
+                value={field.value}
+                onChange={field.onChange}
+              />
+            )}
+          />
+        )}
+
+        {!!email && (
+          <>
+            <Controller
+              control={control}
+              name="newPassword"
+              render={({ field }) => (
+                <TextInputForm
+                  label="New Password"
+                  value={field.value}
+                  onChange={field.onChange}
+                />
+              )}
             />
-          )}
-        />
-      )}
 
-      {!!email && (
-        <>
-          <Controller
-            control={control}
-            name="newPassword"
-            render={({ field }) => (
-              <TextInputForm
-                label="New Password"
-                value={field.value}
-                onChange={field.onChange}
-              />
-            )}
-          />
+            <Controller
+              control={control}
+              name="reNewPassword"
+              render={({ field }) => (
+                <TextInputForm
+                  label="Confirm New Password"
+                  value={field.value}
+                  onChange={field.onChange}
+                />
+              )}
+            />
+            <Controller
+              control={control}
+              name="otp"
+              render={({ field }) => (
+                <TextInputForm
+                  label="OTP"
+                  value={field.value}
+                  onChange={field.onChange}
+                />
+              )}
+            />
+            <div className="countdown-resend">
+              <p style={{ fontSize: "0.8rem" }}>
+                Time Remaining: {""}
+                <span className="countdown-text">{count}s</span>
+              </p>
+              <button
+                onClick={() => {
+                  handleStartRemain();
+                  // getOTP.mutate(email);
+                }}
+              >
+                Resend OTP
+              </button>
+            </div>
+          </>
+        )}
 
-          <Controller
-            control={control}
-            name="reNewPassword"
-            render={({ field }) => (
-              <TextInputForm
-                label="Confirm New Password"
-                value={field.value}
-                onChange={field.onChange}
-              />
-            )}
-          />
-          <Controller
-            control={control}
-            name="otp"
-            render={({ field }) => (
-              <TextInputForm
-                label="OTP"
-                value={field.value}
-                onChange={field.onChange}
-              />
-            )}
-          />
-          <div className="countdown-resend">
-            <p style={{ fontSize: "0.8rem" }}>
-              Time Remaining: {""}
-              <span className="countdown-text">{count}s</span>
-            </p>
-            <button
-              onClick={() => {
-                handleStartRemain();
-                // getOTP.mutate(email);
-              }}
-            >
-              Resend OTP
-            </button>
-          </div>
-        </>
-      )}
-
-      <Button className="btn-submit" type="submit">
-        {email ? "Change Password" : "Send"}
-      </Button>
-    </form>
+        <Button className="btn-submit" type="submit">
+          {email ? "Change Password" : "Send"}
+        </Button>
+      </form>
+    </>
   );
 };
 
