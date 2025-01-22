@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "types": [],
+    "types": ["node"],
     // "baseUrl": ".",
     "rootDir": "src",
     "target": "es6",

@@ -1,5 +1,5 @@
 import { apiRouteConstants } from "../../constants/apiRoute.constants"
-import { AuthModel, RegisterModel, User, UserDTO, VerifyPayload } from "../../models/auth.model"
+import { AuthModel, RegisterModel, SetNewPassword, User, UserDTO, VerifyPayload } from "../../models/auth.model"
 import { http } from "./http"
 import toast from 'react-hot-toast'
 
@@ -39,6 +39,24 @@ export const verify = async (params: VerifyPayload) => {
     try {
         const response = await http.post(apiRouteConstants.VERIFY, undefined, params)
         return response.value
+    } catch (error) {
+        throw error
+    }
+}
+
+export const forgotPassword = async (email: string) => {
+    try {
+        const response = await http.post(apiRouteConstants.FORGOTPASSWORD, undefined, email)
+        return response.message
+    } catch (error) {
+        throw error
+    }
+}
+
+export const setNewPassword = async (params: SetNewPassword) => {
+    try {
+        const response = await http.post(apiRouteConstants.SETNEWPASSWORD, undefined, params)
+        return response.message
     } catch (error) {
         throw error
     }

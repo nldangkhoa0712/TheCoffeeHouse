@@ -1,5 +1,5 @@
 const Home = () => {
-  return <div>Home</div>;
+  return <div style={{ height: "500vh" }}>HOme</div>;
 };
 
 export default Home;

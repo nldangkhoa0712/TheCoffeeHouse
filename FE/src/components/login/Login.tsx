@@ -6,6 +6,7 @@ import { AuthModel } from "../../models/auth.model";
 import "../../styles/page/auth/index.css";
 import { useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { convertToSHA1 } from "../../utils/encryption";
 
 interface LoginVerify {
   setForgot: React.Dispatch<React.SetStateAction<boolean>>;
@@ -25,7 +26,11 @@ const Login = ({ setForgot }: LoginVerify) => {
   });
 
   const onSubmit = (data: AuthModel) => {
-    mutateLogin(data, {
+    const payload: AuthModel = {
+      ...data,
+      password: convertToSHA1(data.password),
+    };
+    mutateLogin(payload, {
       onSuccess(resp) {
         navigate("/");
       },
