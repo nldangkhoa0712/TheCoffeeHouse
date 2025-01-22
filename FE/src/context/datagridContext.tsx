@@ -3,6 +3,7 @@ import { createContext, ReactNode } from "react";
 import { DataGrid, GridColDef, GridValidRowModel } from "@mui/x-data-grid";
 import { DataGridProps } from "@mui/x-data-grid";
 import { GridColCustom } from "../types/customTypeColumns";
+import FormatRenderCell from "../utils/format-renderCell";
 
 type TableProps = {
   children?: ReactNode;
@@ -11,23 +12,51 @@ type TableProps = {
 
 type TableContextProps = {
   data?: GridValidRowModel[];
+  columns?: GridColCustom[];
+  rowHeight?: number;
 };
 
 export const TableContext = createContext<TableContextProps>({});
 
-export const DatagridTable = ({ data, children, ...props }: TableProps) => {
+export const DatagridTable = ({
+  data,
+  children,
+  columns,
+  rowHeight,
+  ...props
+}: TableProps) => {
+  const _columns: GridColCustom[] = columns.map(
+    (item: GridColCustom, index: number) => {
+      return {
+        ...item,
+        renderCell: (params) => FormatRenderCell(params, item.type, item.field),
+      };
+    }
+  );
+
   return (
     <TableContext.Provider value={{ data }}>
       {children}
       <DataGrid
-        getRowHeight={() => 200}
+        columns={_columns}
+        getRowHeight={() => rowHeight}
         sx={{
           "& .MuiDataGrid-root .MuiDataGrid-row": {
             height: "300px !important",
           },
+          "& .MuiDataGrid-cell": {
+            display: "flex",
+            alignItems: "center",
+            // padding: "10px",
+          },
+          "& .MuiDataGrid-cell--textRight": {
+            display: "flex",
+            justifyContent: "center !important",
+            textAlign: "center !important",
+          },
         }}
         rows={data}
-        disableColumnMenu
+        showCellVerticalBorder
         disableColumnSelector
         disableRowSelectionOnClick
         {...props}

@@ -8,5 +8,7 @@ export const apiRouteConstants = {
     SETNEWPASSWORD: '/Auth/SetNewPassword',
 
     //Product
-    GETALLPRODUCT: '/Product/GetProduct'
+    GETALLPRODUCT: '/Product/GetProduct',
+    GETALLCATEGORY: '/Category/GetCateogry',
+    ADDPRODUCT: '/Product/AddProduct'
 }

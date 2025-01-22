@@ -8,7 +8,6 @@ type ZoomProps = {
 
 const ZoomImage = ({ images }: ZoomProps) => {
   const [isZoom, setIsZoom] = useState<boolean>(false);
-  console.log(isZoom);
   return (
     <div>
       <div

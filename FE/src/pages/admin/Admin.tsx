@@ -1,24 +1,38 @@
-import React from "react";
+import React, { createContext, useState } from "react";
 import SideBar from "../../components/SideBar";
 import { Outlet } from "react-router-dom";
 
+export const HeaderTitleContext = createContext("");
+
 const Admin = () => {
+  const [isDrawerOpen, setDrawerOpen] = useState(false);
+  const [titleHeader, setTitleHeader] = useState<string>("");
   return (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "15% 85%",
-        height: "100vh",
-        // gap: "-10px",
-      }}
-    >
-      <SideBar />
-      <Outlet />
-      {/* <div style={{ width: "20%" }}>
+    <HeaderTitleContext.Provider value={titleHeader}>
+      <div
+        style={{
+          display: "flex", // Sử dụng flexbox để chia không gian giữa sidebar và outlet
+          height: "100vh",
+          overflowX: "hidden",
+          gap: "30px",
+        }}
+      >
+        <SideBar
+          isDrawerOpen={isDrawerOpen}
+          setDrawerOpen={setDrawerOpen}
+          setTitleHeader={setTitleHeader}
+        />
+        <div
+          style={{
+            flex: isDrawerOpen ? "0 0 85%" : "0 0 95%",
+            transition: "flex 0.3s ease-in-out",
+            minWidth: "0",
+          }}
+        >
+          <Outlet />
+        </div>
       </div>
-      <div style={{ width: "80%" }}>
-      </div> */}
-    </div>
+    </HeaderTitleContext.Provider>
   );
 };
 
