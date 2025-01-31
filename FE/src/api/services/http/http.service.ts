@@ -24,7 +24,7 @@ const callAPI = async <T>(url: string, resquestData: object | undefined | string
 }
 
 
-export const get = <T>(url: string, requestQuery: Record<string, string> | undefined, responseData: object) => {
+export const get = <T>(url: string, requestQuery: Record<string, any> | undefined, responseData: object) => {
     return callAPI<T>(url, responseData, requestQuery,)
 }
 

@@ -1,34 +1,14 @@
-.container {
-  max-width: 1440px;
-  height: 100px;
-  width: 100%;
-}
-
-.container {
-  display: flex;
-  align-items: center;
-}
-
-.container ul {
-  width: 70%;
-  display: flex;
-  list-style-type: none;
-  align-items: center;
-  justify-content: center;
-  gap: 50px;
-}
-
-.container .nav-item a {
+.nav-item a {
   color: #74512d;
   font-size: 20px;
 }
 
-.container .nav-item {
+.nav-item {
   position: relative;
   line-height: 2;
 }
 
-.container .nav-item::before {
+.nav-item::before {
   content: "";
   position: absolute;
   background-color: #74512d;
@@ -38,11 +18,11 @@
   transition: 0.4s ease-in-out;
 }
 
-.container .nav-item:hover::before {
+.nav-item:hover::before {
   width: 100%;
 }
 
-.container ul a {
+ul a {
   text-decoration: none;
 }
 

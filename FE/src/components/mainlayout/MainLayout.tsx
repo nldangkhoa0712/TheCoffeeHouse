@@ -1,36 +1,22 @@
-import { Outlet } from "react-router-dom";
-import Header from "../Header/Header";
-import Footer from "../Footer/Footer";
+import { Outlet } from 'react-router-dom'
+import Header from '../Header/Header'
+import Footer from '../Footer/Footer'
+import { Suspense } from 'react'
 
 const MainLayout = () => {
   return (
     <div>
-      <header
-        style={{
-          backgroundColor: "rgba(255,255, 255, 0.4)",
-          position: "sticky",
-          top: "0",
-          borderBottom: "1px solid #ccc",
-          display: "flex",
-          justifyContent: "center",
-        }}
-      >
+      <header className="sticky top-0 z-50 flex w-full justify-center border-b bg-[#ffffffca]">
         <Header />
       </header>
-      <Outlet />
-      <footer
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          height: "32vh",
-          backgroundColor: "#543310",
-          // width: "100%",
-        }}
-      >
+      <Suspense fallback={<div>...Loading</div>}>
+        <Outlet />
+      </Suspense>
+      <footer className="bottom-0 flex h-[32vh] w-full justify-center bg-[#543310]">
         <Footer />
       </footer>
     </div>
-  );
-};
+  )
+}
 
-export default MainLayout;
+export default MainLayout

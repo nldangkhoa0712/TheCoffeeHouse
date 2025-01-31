@@ -53,3 +53,16 @@ export const addProduct = async (req: AddProductRequest) => {
         console.log(error)
     }
 }
+
+export const getProductDetail = async (idProduct: number) => {
+    try {
+        const response = await http.get(
+            apiRouteConstants.GETPRODUCTDETAIL,
+            { idProduct },
+            {}
+        )
+        return response.value
+    } catch (error) {
+        console.log(error)
+    }
+}

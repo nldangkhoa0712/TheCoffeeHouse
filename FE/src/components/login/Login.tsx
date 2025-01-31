@@ -7,6 +7,7 @@ import { AuthModel } from "../../models/auth.model";
 import "../../styles/page/auth/index.css";
 import { hashData } from "../../utils/encryption";
 import { Helmet } from "react-helmet";
+import { storageService } from "../../storage";
 
 interface LoginVerify {
   setForgot: React.Dispatch<React.SetStateAction<boolean>>;
@@ -14,7 +15,7 @@ interface LoginVerify {
 
 const Login = ({ setForgot }: LoginVerify) => {
   // const router = useRouter()
-  const { mutateAsync: mutateLogin, isLoading } = useLogin();
+  const { mutate: mutateLogin, isLoading } = useLogin();
   const navigate = useNavigate();
   const { search } = useLocation();
   const emailQuery = new URLSearchParams(search).get("email");
@@ -31,8 +32,9 @@ const Login = ({ setForgot }: LoginVerify) => {
       password: await hashData(data.password),
     };
     mutateLogin(payload, {
-      onSuccess(resp) {
-        navigate("/");
+      onSuccess(resp: any) {
+        storageService.setUser(resp);
+        navigate("/home");
       },
     });
   };
