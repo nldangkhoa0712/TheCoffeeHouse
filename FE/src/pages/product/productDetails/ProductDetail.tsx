@@ -15,7 +15,9 @@ import {
   ProductSize,
   ProductTopping,
 } from '../../../models/product.model'
-import { CartModel } from '../../../models/cart.model'
+import { CartModel, ToppingModel } from '../../../models/cart.model'
+import { useAddToCart } from '../../../hooks/cart.api'
+import { formatCurrency } from '../../../utils/formatCurrency'
 
 const ProductDetail = () => {
   const navigate = useNavigate()
@@ -23,7 +25,11 @@ const ProductDetail = () => {
   const [image, setImage] = useState<any>()
   const [topping, setTopping] = useState<ProductTopping[]>([])
   const [price, setPrice] = useState<number>(0)
-  const [addToCart, setAddtoCart] = useState<CartModel[]>([])
+  const [addToCart, setAddtoCart] = useState<CartModel>({
+    productSizeId: 0,
+    quantity: 1,
+    toppings: [],
+  })
   const [quanlity, setQuanlity] = useState<number>(1)
   const { isLoading } = useQuery({
     queryKey: ['getProductDetail'],
@@ -35,6 +41,7 @@ const ProductDetail = () => {
       setImage(data.imageDefaultNavigation.firebaseImage)
     },
   })
+  const { mutate: mutateAddToCart } = useAddToCart()
 
   const handleChangeQuanlity = (e: MouseEvent<HTMLButtonElement>) => {
     const { name } = e.currentTarget
@@ -46,14 +53,32 @@ const ProductDetail = () => {
     setQuanlity(0)
   }
 
-  const handleAddToCart = (e: MouseEvent<HTMLElement>, value: any) => {
-    console.log(value)
-    setAddtoCart(value)
+  const handleAddToCart = (key: keyof CartModel, value: any) => {
+    // console.log(value)
+    if (value) {
+      if (key === 'toppings') {
+        console.log(value)
+        const transformArrTopping = value.map((item: any) => {
+          return { id: item.id ?? item, quanlity: 1 }
+        })
+        setAddtoCart({
+          ...addToCart,
+          [key]: transformArrTopping,
+        })
+        return
+      }
+      setAddtoCart({ ...addToCart, [key]: value })
+    }
+  }
+
+  const onClickAddToCart = () => {
+    mutateAddToCart(addToCart)
   }
 
   const handleChangePrice = (e: MouseEvent<HTMLElement>, value: number) => {
     setPrice(value)
   }
+
   const handleClick = () => {
     navigate('/home', { state: { id: 12 } })
   }
@@ -69,6 +94,8 @@ const ProductDetail = () => {
     // dotsClass: 'dot-slick',
     arrows: false,
   }
+
+  console.log(addToCart)
 
   return (
     <div className="container m-auto">
@@ -109,7 +136,9 @@ const ProductDetail = () => {
         <div className="w-[50%]">
           <h1 className="text-4xl">Trà sữa</h1>
           <div className="flex items-center justify-between">
-            <h1 className="text-4xl text-orange-400">{price}</h1>
+            <h1 className="text-4xl text-orange-400">
+              {formatCurrency(price)}
+            </h1>
             <div className="flex items-center">
               <button
                 onClick={handleChangeQuanlity}
@@ -133,8 +162,10 @@ const ProductDetail = () => {
             <h1>Chọn size (Bắt Buộc)</h1>
             <ToggleButtonGroup
               exclusive
-              value={addToCart}
-              onChange={handleAddToCart}
+              value={addToCart.productSizeId}
+              onChange={(e, size) => {
+                handleAddToCart('productSizeId', size)
+              }}
             >
               <div className="my-2 flex gap-5">
                 {productSizes &&
@@ -148,7 +179,7 @@ const ProductDetail = () => {
                         }}
                         onClick={(e) => handleChangePrice(e, item.price)}
                         value={item.id!}
-                      >{`${item.size} | ${item.price}`}</ToggleButton>
+                      >{`${item.size} | ${formatCurrency(item.price)}`}</ToggleButton>
                     )
                   })}
               </div>
@@ -156,9 +187,14 @@ const ProductDetail = () => {
           </div>
 
           {/* Topping */}
-          <div className="mt-2">
+          <div className="mt-2 h-[50%]">
             <h1>Topping</h1>
-            <ToggleButtonGroup>
+            <ToggleButtonGroup
+              value={addToCart.toppings.map((item) => item.id)}
+              onChange={(e, topping) => {
+                handleAddToCart('toppings', topping)
+              }}
+            >
               <div className="my-2 flex flex-wrap gap-x-5 gap-y-2">
                 {topping &&
                   topping.map((item, index) => {
@@ -170,12 +206,20 @@ const ProductDetail = () => {
                           padding: '11px 18px !important',
                         }}
                         value={item.id}
-                      >{`${item.toppingName} + ${item.toppingPrice}`}</ToggleButton>
+                      >{`${item.toppingName} + ${formatCurrency(item.toppingPrice)}`}</ToggleButton>
                     )
                   })}
               </div>
             </ToggleButtonGroup>
           </div>
+
+          {/* Add To Cart */}
+          <button
+            className="flex w-full items-center justify-center bg-orange-500 px-5 py-4 text-[#ccc]"
+            onClick={onClickAddToCart}
+          >
+            Add To Cart
+          </button>
         </div>
       </div>
 

@@ -1,5 +1,10 @@
 export interface CartModel {
     productSizeId: number,
     quantity: number,
-    toppings: any
+    toppings: ToppingModel[]
+}
+
+export interface ToppingModel {
+    id: number,
+    quantity: number
 }

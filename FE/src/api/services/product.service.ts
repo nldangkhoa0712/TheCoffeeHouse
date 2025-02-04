@@ -40,8 +40,6 @@ export const addProduct = async (req: AddProductRequest) => {
         images: await prepareImgsFn(req.images)
     }
 
-    console.log(addProductPayload)
-
     try {
         const response = await http.post(
             apiRouteConstants.ADDPRODUCT,
