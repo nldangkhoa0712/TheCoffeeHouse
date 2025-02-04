@@ -8,83 +8,83 @@ import {
   TextField,
   ToggleButton,
   ToggleButtonGroup,
-} from "@mui/material";
-import { deepOrange } from "@mui/material/colors";
+} from '@mui/material'
+import { deepOrange } from '@mui/material/colors'
 import React, {
   BaseSyntheticEvent,
   ChangeEvent,
   useEffect,
   useRef,
   useState,
-} from "react";
-import { Controller, set, useForm } from "react-hook-form";
-import Pricing from "../../../components/Pricing/Pricing";
-import SelectCategory from "../../../components/Select/SelectCategory";
-import UploadImg from "../../../components/UploadImg/UploadImg";
-import { AddProductRequest } from "../../../models/product.model";
+} from 'react'
+import { Controller, set, useForm } from 'react-hook-form'
+import Pricing from '../../../components/Pricing/Pricing'
+import SelectCategory from '../../../components/Select/SelectCategory'
+import UploadImg from '../../../components/UploadImg/UploadImg'
+import { AddProductRequest } from '../../../models/product.model'
 import {
   fileToFileRequestData,
   prepareImgsFn,
-} from "../../../utils/convertBase64";
-import { useAddProduct } from "../../../hooks/product.api";
+} from '../../../utils/convertBase64'
+import { useAddProduct } from '../../../hooks/product.api'
 
 interface SizeType {
-  size: string;
-  price: number;
-  isValid: boolean;
+  size: string
+  price: number
+  isValid: boolean
 }
 
 const AddProduct = () => {
-  const [sizes, setSizes] = useState<SizeType[]>([]);
-  const addProduct = useAddProduct();
+  const [sizes, setSizes] = useState<SizeType[]>([])
+  const addProduct = useAddProduct()
 
   const handleAddProductSizes = (value: string[]) => {
     if (sizes.length > value.length) {
-      const arrUpdate = sizes.filter((item) => value.includes(item.size));
-      setSizes(arrUpdate);
-      return;
+      const arrUpdate = sizes.filter((item) => value.includes(item.size))
+      setSizes(arrUpdate)
+      return
     }
 
     const newProductSize = value.filter((item) => {
-      return !sizes.some((itemSize) => itemSize.size == item);
-    });
+      return !sizes.some((itemSize) => itemSize.size == item)
+    })
 
     if (newProductSize.length > 0) {
       const arr = newProductSize.map((item) => {
-        return { size: item, price: 0, isValid: true };
-      });
-      setSizes([...sizes, ...arr]);
-      return;
+        return { size: item, price: 0, isValid: true }
+      })
+      setSizes([...sizes, ...arr])
+      return
     }
 
     const productSize: SizeType[] = value.map((item: string) => {
-      return { size: item, price: 0, isValid: true };
-    });
-    setSizes(productSize);
-  };
+      return { size: item, price: 0, isValid: true }
+    })
+    setSizes(productSize)
+  }
 
   const { control, handleSubmit, getValues, setValue } =
     useForm<AddProductRequest>({
       defaultValues: {
-        productName: "",
-        description: "",
+        productName: '',
+        description: '',
         productSizes: [],
-        categoryId: "",
+        categoryId: '',
         isValid: true,
         images: [],
         imageDefaultNavigation: undefined,
       },
-    });
+    })
 
   const onSubmit = (data: AddProductRequest, e?: BaseSyntheticEvent) => {
-    e?.preventDefault();
+    e?.preventDefault()
     const payload = {
       ...data,
       productSizes: sizes,
-    };
-    console.log(payload);
-    addProduct.mutateAsync(payload);
-  };
+    }
+    console.log(payload)
+    addProduct.mutateAsync(payload)
+  }
   return (
     <Box component="form" onSubmit={handleSubmit(onSubmit)}>
       <Button type="submit">Add Product</Button>
@@ -93,10 +93,10 @@ const AddProduct = () => {
         <Grid size={8}>
           <Card
             sx={{
-              padding: "20px",
-              display: "flex",
-              flexDirection: "column",
-              gap: "20px",
+              padding: '20px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '20px',
             }}
           >
             <h2>Generation Infomation</h2>
@@ -108,7 +108,7 @@ const AddProduct = () => {
                   <>
                     <FormControl>
                       <label
-                        style={{ marginBottom: "10px" }}
+                        style={{ marginBottom: '10px' }}
                         htmlFor="name-product"
                       >
                         Name Product
@@ -121,7 +121,7 @@ const AddProduct = () => {
                       />
                     </FormControl>
                   </>
-                );
+                )
               }}
             />
 
@@ -132,7 +132,7 @@ const AddProduct = () => {
                 return (
                   <>
                     <FormControl>
-                      <label style={{ marginBottom: "10px" }} htmlFor="">
+                      <label style={{ marginBottom: '10px' }} htmlFor="">
                         Description
                       </label>
                       <TextField
@@ -143,7 +143,7 @@ const AddProduct = () => {
                       ></TextField>
                     </FormControl>
                   </>
-                );
+                )
               }}
             />
 
@@ -153,23 +153,23 @@ const AddProduct = () => {
               value={sizes.map((item) => item.size)}
               onChange={(e, sizes) => handleAddProductSizes(sizes)}
               sx={{
-                flexDirection: "column",
-                gap: "10px",
+                flexDirection: 'column',
+                gap: '10px',
               }}
               aria-label="Platform"
             >
               <label htmlFor="select-size">
-                Size <br />{" "}
-                <span style={{ fontSize: "12px", opacity: "0.6" }}>
+                Size <br />{' '}
+                <span style={{ fontSize: '12px', opacity: '0.6' }}>
                   Pick Available Size
                 </span>
               </label>
-              <div style={{ display: "flex", gap: "10px" }}>
+              <div style={{ display: 'flex', gap: '10px' }}>
                 <ToggleButton
                   sx={{
-                    borderRadius: "10px !important",
-                    border: "1px solid #ccc !important",
-                    padding: "11px 18px !important",
+                    borderRadius: '10px !important',
+                    border: '1px solid #ccc !important',
+                    padding: '11px 18px !important',
                   }}
                   value="S"
                 >
@@ -177,9 +177,9 @@ const AddProduct = () => {
                 </ToggleButton>
                 <ToggleButton
                   sx={{
-                    borderRadius: "10px !important",
-                    border: "1px solid #ccc !important",
-                    padding: "11px 18px !important",
+                    borderRadius: '10px !important',
+                    border: '1px solid #ccc !important',
+                    padding: '11px 18px !important',
                   }}
                   value="M"
                 >
@@ -187,9 +187,9 @@ const AddProduct = () => {
                 </ToggleButton>
                 <ToggleButton
                   sx={{
-                    borderRadius: "10px !important",
-                    border: "1px solid #ccc !important",
-                    padding: "11px 18px !important",
+                    borderRadius: '10px !important',
+                    border: '1px solid #ccc !important',
+                    padding: '11px 18px !important',
                   }}
                   value="L"
                 >
@@ -202,7 +202,7 @@ const AddProduct = () => {
 
         {/* Upload Image */}
         <Grid size={4}>
-          <Card sx={{ padding: "20px", width: "100%" }}>
+          <Card sx={{ padding: '20px', width: '100%' }}>
             <h3>Upload Image</h3>
             <Controller
               control={control}
@@ -220,7 +220,7 @@ const AddProduct = () => {
 
         {/* Pricing */}
         <Grid size={8}>
-          <Card sx={{ padding: "20px" }}>
+          <Card sx={{ padding: '20px' }}>
             <h2>Price</h2>
             <Pricing arrSize={sizes} onChange={setSizes} />
           </Card>
@@ -228,7 +228,7 @@ const AddProduct = () => {
 
         {/* Category */}
         <Grid size={4}>
-          <Card sx={{ padding: "20px" }}>
+          <Card sx={{ padding: '20px' }}>
             <h2>Category</h2>
             <Controller
               control={control}
@@ -244,7 +244,7 @@ const AddProduct = () => {
         </Grid>
       </Grid>
     </Box>
-  );
-};
+  )
+}
 
-export default AddProduct;
+export default AddProduct

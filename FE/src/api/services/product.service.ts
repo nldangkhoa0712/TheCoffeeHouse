@@ -40,13 +40,24 @@ export const addProduct = async (req: AddProductRequest) => {
         images: await prepareImgsFn(req.images)
     }
 
-    console.log(addProductPayload)
-
     try {
         const response = await http.post(
             apiRouteConstants.ADDPRODUCT,
             {},
             addProductPayload
+        )
+        return response.value
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const getProductDetail = async (idProduct: number) => {
+    try {
+        const response = await http.get(
+            apiRouteConstants.GETPRODUCTDETAIL,
+            { idProduct },
+            {}
         )
         return response.value
     } catch (error) {

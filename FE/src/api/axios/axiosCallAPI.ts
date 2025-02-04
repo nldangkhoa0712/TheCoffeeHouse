@@ -5,7 +5,7 @@ import { ResponseModel } from "../services/http/http.service";
 import { apiRouteConstants } from "../../constants/apiRoute.constants";
 
 export const axiosCallAPI: AxiosInstance = axios.create({
-    baseURL: 'http://localhost:8080/api',
+    baseURL: import.meta.env.VITE_BASE_URL,
     headers: {
         'Content-Type': 'application/json'
     },
@@ -39,6 +39,7 @@ axiosCallAPI.interceptors.response.use(
         // Xử lí khi login => lưu accessToken
         if (response.config.url === apiRouteConstants.LOGIN) {
             storageService.setAccessToken(responseData.value.token)
+            // storageService.set('userAccount', responseData.value.userAccount)
         }
 
         return response

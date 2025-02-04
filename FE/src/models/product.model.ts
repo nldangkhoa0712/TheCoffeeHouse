@@ -8,8 +8,29 @@ export interface AddProductRequest {
     imageDefaultNavigation: File,
 }
 
-interface ProductSize {
+export interface ProductSize {
+    id?: number,
     size: string,
     price: number,
+    isValid: boolean
+}
+
+export interface ProductDetailsModel {
+    productSizes: ProductSize[],
+    images: any,
+    category: { childCategory: any, id: number, categoryName: string },
+    imageDefaultNavigation: any,
+    toppings: ProductTopping[],
+    id: number,
+    productName: string,
+    description: string,
+    categoryId: number,
+    isValid: true
+}
+
+export interface ProductTopping {
+    id: number,
+    toppingName: string,
+    toppingPrice: number,
     isValid: boolean
 }
