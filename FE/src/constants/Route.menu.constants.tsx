@@ -11,6 +11,7 @@ import Auth from '../pages/auth'
 import VerifySuccess from '../pages/verifySuccess'
 import { JSX, lazy, Suspense } from 'react'
 import ProductDetail from '../pages/product/productDetails'
+import InforCart from '../pages/cart/infor-cart'
 
 const HomePage = lazy(() => import('../pages/home'))
 
@@ -46,6 +47,7 @@ export const route: RouteType[] = [
           },
           { path: 'content', element: <Content /> },
           { path: 'detail', element: <ProductDetail /> },
+          { path: 'cart', element: <InforCart /> },
         ],
       },
     ],

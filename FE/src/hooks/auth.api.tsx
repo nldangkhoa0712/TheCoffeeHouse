@@ -1,26 +1,26 @@
-import { useMutation } from "@tanstack/react-query";
-import { AuthService } from "../api/services";
+import { useMutation } from '@tanstack/react-query'
+import { AuthService } from '../api/services'
 
 export const useLogin = () => {
-  return useMutation(AuthService.login);
-};
+  return useMutation(AuthService.login2)
+}
 
 export const useRegister = () => {
-  return useMutation(AuthService.register);
-};
+  return useMutation(AuthService.register)
+}
 
 export const useGetOTP = () => {
-  return useMutation(AuthService.getOTP);
-};
+  return useMutation(AuthService.getOTP)
+}
 
 export const useVerify = () => {
-  return useMutation(AuthService.verify);
-};
+  return useMutation(AuthService.verify)
+}
 
 export const useForgotPassword = () => {
-  return useMutation(AuthService.forgotPassword);
-};
+  return useMutation(AuthService.forgotPassword)
+}
 
 export const useSetPassword = () => {
-  return useMutation(AuthService.setNewPassword);
-};
+  return useMutation(AuthService.setNewPassword)
+}
