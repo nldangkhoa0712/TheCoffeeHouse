@@ -5,8 +5,8 @@ import { ResponseModel } from "../services/http/http.service";
 import { apiRouteConstants } from "../../constants/apiRoute.constants";
 
 export const axiosCallAPI: AxiosInstance = axios.create({
-    baseURL: import.meta.env.VITE_BASE_URL,
-    // baseURL: 'http://103.140.249.182:8080/api'
+    // baseURL: import.meta.env.VITE_BASE_URL,
+    baseURL: 'http://103.140.249.182:8080/api',
     headers: {
         'Content-Type': 'application/json'
     },

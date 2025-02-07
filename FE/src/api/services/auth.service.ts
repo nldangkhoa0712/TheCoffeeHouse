@@ -15,15 +15,6 @@ export const login = async (params: AuthModel): Promise<User> => {
     }
 }
 
-export const login2 = async (params: AuthModel): Promise<User> => {
-    try {
-        const response = await http.post<any>("http://localhost:1880/login", {}, params)
-        return UserDTO(response.value)
-    } catch (error) {
-        throw error
-    }
-}
-
 export const register = async (params: RegisterModel) => {
     try {
         const response = await http.post(apiRouteConstants.REGISTER, undefined, params)
