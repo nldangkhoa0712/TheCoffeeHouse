@@ -14,5 +14,6 @@ export const apiRouteConstants = {
     GETPRODUCTDETAIL: '/Product/GetProductDetail',
 
     //Cart
-    ADDTOCART: '/Cart/AddToCart'
+    ADDTOCART: '/Cart/AddToCart',
+    GETCART: '/Cart/GetCart'
 }

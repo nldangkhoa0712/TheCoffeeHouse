@@ -6,6 +6,7 @@ import { apiRouteConstants } from "../../constants/apiRoute.constants";
 
 export const axiosCallAPI: AxiosInstance = axios.create({
     baseURL: import.meta.env.VITE_BASE_URL,
+    // baseURL: 'http://103.140.249.182:8080/api'
     headers: {
         'Content-Type': 'application/json'
     },
@@ -37,8 +38,8 @@ axiosCallAPI.interceptors.response.use(
 
 
         // Xử lí khi login => lưu accessToken
+        storageService.setAccessToken(responseData.value.token)
         if (response.config.url === apiRouteConstants.LOGIN) {
-            storageService.setAccessToken(responseData.value.token)
             // storageService.set('userAccount', responseData.value.userAccount)
         }
 

@@ -1,5 +1,5 @@
 import { apiRouteConstants } from "../../constants/apiRoute.constants"
-import { CartModel } from "../../models/cart.model"
+import { CartItem, CartModel } from "../../models/cart.model"
 import { http } from "./http"
 
 export const AddToCart = async (param: CartModel) => {
@@ -12,5 +12,18 @@ export const AddToCart = async (param: CartModel) => {
         return response.value
     } catch (error) {
         console.log(error)
+    }
+}
+
+export const getAllCart = async () => {
+    try {
+        const response = await http.get<CartItem[]>(
+            apiRouteConstants.GETCART,
+            {},
+            {}
+        )
+        return response
+    } catch (error) {
+        throw error
     }
 }
