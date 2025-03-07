@@ -45,3 +45,13 @@ export interface SetNewPassword {
     newPassword: string
     email: string
 }
+
+export interface UserInfo {
+    fullName: string,
+    dateOfBirth: string,
+    email: string,
+    phoneNumber: string,
+    role: boolean,
+    id: number,
+    orderedCount: number
+}

@@ -1,10 +1,42 @@
 import Slider, { Settings } from 'react-slick'
 import image from '../../images/thecoffee.png'
-import { Box } from '@mui/material'
+import { Box, Card, Rating } from '@mui/material'
 import Banner from '../../components/Banner/Banner'
 import imga from '../../images/heading.png'
 import image2 from '../../images/daucu.png'
 import { Helmet } from 'react-helmet'
+import { formatCurrency } from '../../utils/formatCurrency'
+
+const arrItem = [
+  {
+    id: 1,
+    img: image,
+    name: 'Trà Kim Quất Trân Châu',
+    price: 100000,
+    size: 'L',
+  },
+  {
+    id: 2,
+    img: image,
+    name: 'Trà Kim Quất Trân Châu',
+    price: 100000,
+    size: 'L',
+  },
+  {
+    id: 3,
+    img: image,
+    name: 'Trà Kim Quất Trân Châu',
+    price: 100000,
+    size: 'L',
+  },
+  {
+    id: 4,
+    img: image,
+    name: 'Trà Kim Quất Trân Châu',
+    price: 100000,
+    size: 'L',
+  },
+]
 
 const Home = () => {
   return (
@@ -16,174 +48,92 @@ const Home = () => {
       <Banner />
 
       {/* Drink 2023 */}
-      <div className="relative my-30">
-        <div className="absolute top-[-100px] left-10 z-[-1]">
-          <img src={image2} alt="" />
-        </div>
-        <div className="overflow-hidden rounded-b-[50px] bg-[#F9F6F2] text-center">
+      <div className="px-[200px]">
+        <div className="overflow-hidden rounded-[20px] bg-[#F9F6F2] text-center">
           <h1 className="h-30 py-10 text-3xl font-semibold">DRINK 2023</h1>
-          <div className="flex">
-            <img src={imga} alt="" />
-            <img src={imga} alt="" />
-            <img src={imga} alt="" />
-          </div>
         </div>
         {/* List Item */}
-        <div className="mx-auto mt-5 flex max-w-[1440px] justify-evenly py-5 text-center">
-          <div className="flex h-[400px] w-[300px] flex-col justify-between rounded-t-full border border-[#6D311F] p-5">
-            <div className="w-full">
-              <img
-                className="h-[200px] w-[259px] rounded-t-full p-2"
-                src={image}
-                alt=""
-              />
-            </div>
-            <h3 className="px-2 text-xl">Trà Kim Quất Trân Châu</h3>
-            <span className="text-lg font-semibold">100.000 đ</span>
-            <div className="pb-4">
-              <button className="rounded-full bg-[#DA5036] px-4 py-2">
-                Thêm vào giỏ hàng
-              </button>
-            </div>
-          </div>
-
-          <div className="flex h-[400px] w-[300px] flex-col justify-between rounded-t-full border border-[#6D311F] p-5">
-            <div className="w-full">
-              <img
-                className="h-[200px] w-[259px] rounded-t-full p-2"
-                src={image}
-                alt=""
-              />
-            </div>
-            <h3 className="px-2 text-xl">Trà Kim Quất Trân Châu</h3>
-            <span className="text-lg font-semibold">100.000 đ</span>
-            <div className="pb-4">
-              <button className="rounded-full bg-[#DA5036] px-4 py-2">
-                Thêm vào giỏ hàng
-              </button>
-            </div>
-          </div>
-
-          <div className="flex h-[400px] w-[300px] flex-col justify-between rounded-t-full border border-[#6D311F] p-5">
-            <div className="w-full">
-              <img
-                className="h-[200px] w-[259px] rounded-t-full p-2"
-                src={image}
-                alt=""
-              />
-            </div>
-            <h3 className="px-2 text-xl">Trà Kim Quất Trân Châu</h3>
-            <span className="text-lg font-semibold">100.000 đ</span>
-            <div className="pb-4">
-              <button className="rounded-full bg-[#DA5036] px-4 py-2">
-                Thêm vào giỏ hàng
-              </button>
-            </div>
-          </div>
-
-          <div className="flex h-[400px] w-[300px] flex-col justify-between rounded-t-full border border-[#6D311F] p-5">
-            <div className="w-full">
-              <img
-                className="h-[200px] w-[259px] rounded-t-full p-2"
-                src={image}
-                alt=""
-              />
-            </div>
-            <h3 className="px-2 text-xl">Trà Kim Quất Trân Châu</h3>
-            <span className="text-lg font-semibold">100.000 đ</span>
-            <div className="pb-4">
-              <button className="rounded-full bg-[#DA5036] px-4 py-2">
-                Thêm vào giỏ hàng
-              </button>
-            </div>
-          </div>
+        <div className="mx-auto flex gap-10 py-10">
+          {arrItem.map((item, index) => {
+            return (
+              <Card
+                sx={{
+                  borderRadius: '18px',
+                }}
+                key={item.id}
+                className="flex flex-col justify-between rounded-[18px] p-5"
+              >
+                <div className="w-full">
+                  <img
+                    style={{
+                      boxShadow: 'box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px',
+                    }}
+                    className="h-[300px] w-[500px] rounded-[18px] p-2"
+                    src={item.img}
+                    alt=""
+                  />
+                </div>
+                <div className="border-b-1 border-[#edecec] px-2 py-3">
+                  <h3 className="text-xl">{item.name}</h3>
+                  <span className="flex items-center justify-between py-5 text-xl font-semibold">
+                    {formatCurrency(item.price)}
+                    <Rating value={5} />
+                  </span>
+                </div>
+                <div className="pb-4">
+                  <button className="w-full rounded-[12px] bg-[#DA5036] px-4 py-2 text-white">
+                    Thêm vào giỏ hàng
+                  </button>
+                </div>
+              </Card>
+            )
+          })}
         </div>
       </div>
 
       {/* Món ăn được yêu thích */}
-      <div className="relative mt-30 mb-10">
-        <div className="absolute top-[-100px] right-10 z-[-1]">
-          <img src={image2} alt="" />
-        </div>
-        <div className="overflow-hidden rounded-b-[50px] bg-[#F9F6F2] text-center">
+      <div className="px-[200px]">
+        <div className="overflow-hidden rounded-[20px] bg-[#F9F6F2] text-center">
           <h1 className="h-30 py-10 text-3xl font-semibold">
             MÓN ĐƯỢC YÊU THÍCH
           </h1>
-          <div className="flex">
-            <img src={imga} alt="" />
-            <img src={imga} alt="" />
-            <img src={imga} alt="" />
-          </div>
         </div>
         {/* List Item */}
-        <div className="mx-auto mt-5 flex max-w-[1440px] justify-evenly py-5 text-center">
-          <div className="flex h-[400px] w-[300px] flex-col justify-between rounded-t-full border border-[#6D311F] p-5">
-            <div className="w-full">
-              <img
-                className="h-[200px] w-[259px] rounded-t-full p-2"
-                src={image}
-                alt=""
-              />
-            </div>
-            <h3 className="px-2 text-xl">Trà Kim Quất Trân Châu</h3>
-            <span className="text-lg font-semibold">100.000 đ</span>
-            <div className="pb-4">
-              <button className="rounded-full bg-[#DA5036] px-4 py-2">
-                Thêm vào giỏ hàng
-              </button>
-            </div>
-          </div>
-
-          <div className="flex h-[400px] w-[300px] flex-col justify-between rounded-t-full border border-[#6D311F] p-5">
-            <div className="w-full">
-              <img
-                className="h-[200px] w-[259px] rounded-t-full p-2"
-                src={image}
-                alt=""
-              />
-            </div>
-            <h3 className="px-2 text-xl">Trà Kim Quất Trân Châu</h3>
-            <span className="text-lg font-semibold">100.000 đ</span>
-            <div className="pb-4">
-              <button className="rounded-full bg-[#DA5036] px-4 py-2">
-                Thêm vào giỏ hàng
-              </button>
-            </div>
-          </div>
-
-          <div className="flex h-[400px] w-[300px] flex-col justify-between rounded-t-full border border-[#6D311F] p-5">
-            <div className="w-full">
-              <img
-                className="h-[200px] w-[259px] rounded-t-full p-2"
-                src={image}
-                alt=""
-              />
-            </div>
-            <h3 className="px-2 text-xl">Trà Kim Quất Trân Châu</h3>
-            <span className="text-lg font-semibold">100.000 đ</span>
-            <div className="pb-4">
-              <button className="rounded-full bg-[#DA5036] px-4 py-2">
-                Thêm vào giỏ hàng
-              </button>
-            </div>
-          </div>
-
-          <div className="flex h-[400px] w-[300px] flex-col justify-between rounded-t-full border border-[#6D311F] p-5">
-            <div className="w-full">
-              <img
-                className="h-[200px] w-[259px] rounded-t-full p-2"
-                src={image}
-                alt=""
-              />
-            </div>
-            <h3 className="px-2 text-xl">Trà Kim Quất Trân Châu</h3>
-            <span className="text-lg font-semibold">100.000 đ</span>
-            <div className="pb-4">
-              <button className="rounded-full bg-[#DA5036] px-4 py-2">
-                Thêm vào giỏ hàng
-              </button>
-            </div>
-          </div>
+        <div className="mx-auto flex gap-10 py-10">
+          {arrItem.map((item, index) => {
+            return (
+              <Card
+                sx={{
+                  borderRadius: '18px',
+                }}
+                key={item.id}
+                className="flex flex-col justify-between rounded-[18px] p-5"
+              >
+                <div className="w-full">
+                  <img
+                    style={{
+                      boxShadow: 'box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px',
+                    }}
+                    className="h-[300px] w-[500px] rounded-[18px] p-2"
+                    src={item.img}
+                    alt=""
+                  />
+                </div>
+                <div className="border-b-1 border-[#edecec] px-2 py-3">
+                  <h3 className="text-xl">{item.name}</h3>
+                  <span className="flex items-center justify-between py-5 text-xl font-semibold">
+                    {formatCurrency(item.price)}
+                    <Rating value={5} />
+                  </span>
+                </div>
+                <div className="pb-4">
+                  <button className="w-full rounded-[12px] bg-[#DA5036] px-4 py-2 text-white">
+                    Thêm vào giỏ hàng
+                  </button>
+                </div>
+              </Card>
+            )
+          })}
         </div>
       </div>
 

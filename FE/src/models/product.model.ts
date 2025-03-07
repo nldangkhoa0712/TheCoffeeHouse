@@ -9,7 +9,7 @@ export interface AddProductRequest {
 }
 
 export interface ProductSize {
-    id?: number,
+    id: number,
     size: string,
     price: number,
     isValid: boolean
@@ -32,5 +32,11 @@ export interface ProductTopping {
     id: number,
     toppingName: string,
     toppingPrice: number,
-    isValid: boolean
+    isValid?: boolean
+}
+
+export interface ReviewModel {
+    productId: number,
+    rating: number,
+    comment: string
 }

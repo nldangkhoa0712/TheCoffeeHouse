@@ -1,5 +1,6 @@
+import toast from "react-hot-toast"
 import { apiRouteConstants } from "../../constants/apiRoute.constants"
-import { AddProductRequest } from "../../models/product.model"
+import { AddProductRequest, ReviewModel } from "../../models/product.model"
 import { fileToFileRequestData, prepareImgsFn } from "../../utils/convertBase64"
 import { http } from "./http"
 
@@ -62,5 +63,32 @@ export const getProductDetail = async (idProduct: number) => {
         return response.value
     } catch (error) {
         console.log(error)
+    }
+}
+
+export const getRecommendProduct = async (productId: number) => {
+    try {
+        const response = await http.get<any>(apiRouteConstants.GETRECOMMENDPRODCUT, { productId }, {})
+        return response.value
+    } catch (error) {
+        toast.error(error)
+    }
+}
+
+export const getReview = async (id: number, qty: number) => {
+    try {
+        const response = await http.get<ReviewModel[]>(apiRouteConstants.GETREVIEW, { id, quantity: qty }, {})
+        return response.value
+    } catch (error) {
+        toast.error(error)
+    }
+}
+
+export const addReview = async (params: ReviewModel) => {
+    try {
+        const response = await http.post(apiRouteConstants.ADDREVIEW, {}, params)
+        return response.isSuccess
+    } catch (error) {
+        toast.error(error)
     }
 }

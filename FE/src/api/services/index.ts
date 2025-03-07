@@ -1,3 +1,7 @@
 export * as AuthService from './auth.service'
 export * as ProductService from './product.service'
 export * as CartService from './cart.service'
+export * as AddressService from './address.service'
+export * as UserService from './user.service'
+export * as ChatBoxService from './chatbox.service'
+export * as VoucherService from './voucher.service'

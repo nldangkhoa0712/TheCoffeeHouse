@@ -18,16 +18,12 @@ const Banner = () => {
   return (
     <div>
       {/* Carousel */}
-      <Slider {...settings}>
-        <div>
-          <img className="h-[70vh] w-full" src={TheCoffeeShop} alt="" />
-        </div>
-        <div>
-          <img className="h-[70vh] w-full" src={TheCoffeeShop} alt="" />
-        </div>
-        <div>
-          <img className="h-[70vh] w-full" src={TheCoffeeShop} alt="" />
-        </div>
+      <Slider {...settings} className="overflow-hidden rounded-[12px]">
+        <img className="h-[60vh] rounded-[12px]" src={TheCoffeeShop} alt="" />
+
+        <img className="h-[60vh] rounded-[12px]" src={TheCoffeeShop} alt="" />
+
+        <img className="h-[60vh] rounded-[12px]" src={TheCoffeeShop} alt="" />
       </Slider>
 
       <div className="h-10"></div>

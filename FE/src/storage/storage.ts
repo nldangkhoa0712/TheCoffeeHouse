@@ -1,6 +1,5 @@
 export interface User {
-    firstName: string,
-    lastName: string,
+    fullName: string
     dateOfBirth: string,
     phone: string,
     idRole: string,

@@ -1,15 +1,18 @@
+import { ProductSize, ProductTopping } from "./product.model";
+
 export interface CartModel {
-    productSizeId: number,
+    productSizeId: ProductSize,
     quantity: number,
-    toppings: ToppingModel[]
+    toppings: ProductTopping[]
 }
 
 export interface ToppingModel {
     id: number,
     quantity: number
+    price: number
 }
 
-interface CartDetail {
+export interface CartDetail {
     id: number;
     toppingName: string;
     toppingPrice: number;
@@ -27,4 +30,10 @@ export interface CartItem {
     imageDefaultNavigation: string | null;
     cartDetails: CartDetail[];
     cartId: number;
+}
+
+export type PayloadCartModel = {
+    cartIds: number[]
+    voucherId: number
+    addressId: number
 }

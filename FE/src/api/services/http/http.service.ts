@@ -13,7 +13,7 @@ const callAPI = async <T>(url: string, resquestData: object | undefined | string
     const URLAPI = requestQuery ? `${url}?${queryParams}` : url
     try {
         const response = await axiosCallAPI(URLAPI, {
-            method: axiosCallAPI.defaults.method,
+            // method: axiosCallAPI.defaults.method,
             data: resquestData
         })
         return response.data
@@ -25,20 +25,21 @@ const callAPI = async <T>(url: string, resquestData: object | undefined | string
 
 
 export const get = <T>(url: string, requestQuery: Record<string, any> | undefined, responseData: object) => {
+    axiosCallAPI.defaults.method = "GET"
     return callAPI<T>(url, responseData, requestQuery,)
 }
 
-export const post = <T>(url: string, requestQuery: Record<string, string> | undefined, responseData: object | string) => {
+export const post = <T>(url: string, requestQuery: Record<string, any> | undefined, responseData: object | string) => {
     axiosCallAPI.defaults.method = "POST"
     return callAPI<T>(url, responseData, requestQuery)
 }
 
-export const del = <T>(url: string, requestQuery: Record<string, string> | undefined, responseData: object) => {
+export const del = <T>(url: string, requestQuery: Record<string, any> | undefined, responseData: object) => {
     axiosCallAPI.defaults.method = 'DELETE'
     return callAPI<T>(url, responseData, requestQuery)
 }
 
-export const put = <T>(url: string, requestQuery: Record<string, string> | undefined, responseData: object) => {
+export const put = <T>(url: string, requestQuery: Record<string, any> | undefined, responseData: object) => {
     axiosCallAPI.defaults.method = 'PUT'
     return callAPI<T>(url, responseData, requestQuery)
 }

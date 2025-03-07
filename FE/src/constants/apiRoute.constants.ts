@@ -12,8 +12,29 @@ export const apiRouteConstants = {
     GETALLCATEGORY: '/Category/GetCateogry',
     ADDPRODUCT: '/Product/AddProduct',
     GETPRODUCTDETAIL: '/Product/GetProductDetail',
+    GETRECOMMENDPRODCUT: '/Product/GetRecommendProduct',
 
     //Cart
     ADDTOCART: '/Cart/AddToCart',
-    GETCART: '/Cart/GetCart'
+    GETCART: '/Cart/GetCart',
+    CREATEORDER: "/Order/CreateOrderFromCart",
+
+    //Address
+    GETADDRESS: '/Address/GetAddress',
+    ADDADDRESS: '/Address/AddAddress',
+    UPDATEADDRESS: '/Address/UpdateAddress',
+    DELETEADDRESS: '/Address/DeleteAddress',
+
+    //User
+    GETINFOUSER: '/Customer/GetUserInformation',
+
+    //ChatBox
+    CHATWITHAI: '/AI/RecommendAI',
+
+    //Voucher
+    VOUCHER: "/Voucher/CustomerVoucher",
+
+    //Review
+    GETREVIEW: '/Review/GetReview',
+    ADDREVIEW: '/Review/AddReview'
 }

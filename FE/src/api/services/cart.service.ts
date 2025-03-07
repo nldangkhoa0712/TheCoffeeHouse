@@ -1,8 +1,15 @@
+import toast from "react-hot-toast"
 import { apiRouteConstants } from "../../constants/apiRoute.constants"
-import { CartItem, CartModel } from "../../models/cart.model"
+import { CartItem, CartModel, PayloadCartModel } from "../../models/cart.model"
 import { http } from "./http"
 
-export const AddToCart = async (param: CartModel) => {
+type AddToCartModel = {
+    productSizeId: number,
+    quantity: number,
+    toppings: { id: number, quantity: number }[]
+}
+
+export const AddToCart = async (param: AddToCartModel) => {
     try {
         const response = await http.post(
             apiRouteConstants.ADDTOCART,
@@ -22,8 +29,18 @@ export const getAllCart = async () => {
             {},
             {}
         )
-        return response
+        return response.value
     } catch (error) {
+        throw error
+    }
+}
+
+export const createOrderFromCart = async (params: PayloadCartModel) => {
+    try {
+        const response = await http.post(apiRouteConstants.CREATEORDER, {}, params)
+        return response.value
+    } catch (error) {
+        toast.error(error)
         throw error
     }
 }

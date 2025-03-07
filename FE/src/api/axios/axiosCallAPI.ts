@@ -38,8 +38,8 @@ axiosCallAPI.interceptors.response.use(
 
 
         // Xử lí khi login => lưu accessToken
-        storageService.setAccessToken(responseData.value.token)
         if (response.config.url === apiRouteConstants.LOGIN) {
+            storageService.setAccessToken(responseData.value.token)
             // storageService.set('userAccount', responseData.value.userAccount)
         }
 
