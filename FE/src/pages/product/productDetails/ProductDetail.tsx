@@ -1,54 +1,38 @@
+import SendIcon from '@mui/icons-material/Send'
 import {
   Box,
   Breadcrumbs,
-  Button,
   Card,
   CircularProgress,
   FormControl,
   InputAdornment,
   OutlinedInput,
   Rating,
-  TextField,
   ToggleButton,
   ToggleButtonGroup,
   Typography,
 } from '@mui/material'
-import {
-  Link,
-  useLocation,
-  useNavigate,
-  useParams,
-  useSearchParams,
-} from 'react-router-dom'
-import Slider, { Settings } from 'react-slick'
 import { useQuery } from '@tanstack/react-query'
+import { KeyboardEvent, MouseEvent, useEffect, useState } from 'react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+import Slider, { Settings } from 'react-slick'
 import { ProductService } from '../../../api/services'
+import { useAddToCart } from '../../../hooks/cart.api'
 import {
-  KeyboardEvent,
-  KeyboardEventHandler,
-  MouseEvent,
-  MouseEventHandler,
-  useEffect,
-  useState,
-} from 'react'
-import image2 from '../../../images/thecoffeeshop.jpg'
+  useGetRecommendProduct,
+  useGetReview,
+  usePostReview,
+} from '../../../hooks/product.api'
 import avatar from '../../../images/download (1).jpg'
+import { CartModel } from '../../../models/cart.model'
 import {
   ProductDetailsModel,
   ProductSize,
   ProductTopping,
   ReviewModel,
 } from '../../../models/product.model'
-import { CartDetail, CartModel, ToppingModel } from '../../../models/cart.model'
-import { useAddToCart } from '../../../hooks/cart.api'
-import { formatCurrency } from '../../../utils/formatCurrency'
-import SendIcon from '@mui/icons-material/Send'
-import {
-  useGetRecommendProduct,
-  useGetReview,
-  usePostReview,
-} from '../../../hooks/product.api'
 import { AvgNumber } from '../../../utils/avgnumber'
+import { formatCurrency } from '../../../utils/formatCurrency'
 
 const ProductDetail = () => {
   const navigate = useNavigate()
@@ -129,7 +113,7 @@ const ProductDetail = () => {
   const onClickAddToCart = () => {
     const { toppings, productSizeId } = addToCart
     const payload = {
-      productSizeId: productSizeId.id,
+      productSizeId: productSizeId.id ?? 0,
       quantity: quanlity,
       toppings: toppings.map((item: ProductTopping) => {
         return { id: item.id, quantity: 1 }
@@ -184,7 +168,6 @@ const ProductDetail = () => {
     slidesToScroll: 1,
     useCSS: true,
     autoplay: true,
-    // dotsClass: 'dot-slick',
     arrows: false,
   }
 
@@ -401,7 +384,7 @@ const ProductDetail = () => {
         <Typography variant="h5">Đánh giá sản phẩm</Typography>
         <Box>
           {listComment &&
-            listComment.map((item: ReviewModel, index: number) => {
+            listComment.review.map((item: ReviewModel, index: number) => {
               console.log(qtyComment)
               if (index > qtyComment - 1) return null
               return (
@@ -426,7 +409,7 @@ const ProductDetail = () => {
                       <p>{item.comment}</p>
                     </div>
                   </div>
-                  {listComment.length - 1 == index ? null : (
+                  {listComment.review.length - 1 == index ? null : (
                     <hr style={{ margin: '20px 0 0 0' }} />
                   )}
                 </div>

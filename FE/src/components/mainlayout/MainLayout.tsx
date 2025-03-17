@@ -7,13 +7,13 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
 
 const MainLayout = () => {
   return (
-    <div className="relative flex h-screen flex-col justify-between">
-      <header>
-        <Header />
+    <div className="">
+      <header className="sticky top-0 z-50 border-b-2 border-gray-200 bg-[#ffffffcc]">
+        <div className="container mx-auto">
+          <Header />
+        </div>
       </header>
-      {/* <header className="fixed z-50 flex w-full justify-between bg-[#F9F6F2]">
-      </header> */}
-      <main className="px-[100px] py-[110px]">
+      <main>
         <Suspense fallback={<div>...Loading</div>}>
           <Outlet />
           <button
@@ -31,8 +31,10 @@ const MainLayout = () => {
           </button>
         </Suspense>
       </main>
-      <footer className="bottom-0 flex h-[32vh] w-full justify-center bg-[#543310]">
-        <Footer />
+      <footer className="bg-[#fffcf4]">
+        <div className="container mx-auto">
+          <Footer />
+        </div>
       </footer>
     </div>
   )

@@ -78,6 +78,9 @@ const AddProduct = () => {
 
   const onSubmit = (data: AddProductRequest, e?: BaseSyntheticEvent) => {
     e?.preventDefault()
+    // const newSizes = sizes.map((item: SizeType) => {
+    //   const {id, ...newItem} = item
+    // })
     const payload = {
       ...data,
       productSizes: sizes,

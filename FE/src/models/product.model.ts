@@ -9,7 +9,7 @@ export interface AddProductRequest {
 }
 
 export interface ProductSize {
-    id: number,
+    id?: number,
     size: string,
     price: number,
     isValid: boolean
@@ -33,6 +33,11 @@ export interface ProductTopping {
     toppingName: string,
     toppingPrice: number,
     isValid?: boolean
+}
+
+export interface ListReviewModel {
+    review: ReviewModel[],
+    isMax: boolean
 }
 
 export interface ReviewModel {

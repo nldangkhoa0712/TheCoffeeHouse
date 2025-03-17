@@ -1,6 +1,6 @@
 import toast from "react-hot-toast"
 import { apiRouteConstants } from "../../constants/apiRoute.constants"
-import { AddProductRequest, ReviewModel } from "../../models/product.model"
+import { AddProductRequest, ListReviewModel, ReviewModel } from "../../models/product.model"
 import { fileToFileRequestData, prepareImgsFn } from "../../utils/convertBase64"
 import { http } from "./http"
 
@@ -31,6 +31,7 @@ export const getCategory = async () => {
 }
 
 export const addProduct = async (req: AddProductRequest) => {
+    console.log(req.imageDefaultNavigation)
     const addProductPayload = {
         productName: req.productName,
         description: req.description,
@@ -77,7 +78,7 @@ export const getRecommendProduct = async (productId: number) => {
 
 export const getReview = async (id: number, qty: number) => {
     try {
-        const response = await http.get<ReviewModel[]>(apiRouteConstants.GETREVIEW, { id, quantity: qty }, {})
+        const response = await http.get<ListReviewModel>(apiRouteConstants.GETREVIEW, { id, quantity: qty }, {})
         return response.value
     } catch (error) {
         toast.error(error)

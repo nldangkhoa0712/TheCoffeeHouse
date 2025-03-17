@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { storageService } from '../../storage'
 import '../../styles/component/header.css'
+import { Avatar, IconButton, Menu, MenuItem } from '@mui/material'
 
 const Header = () => {
   const navigate = useNavigate()
@@ -39,8 +40,8 @@ const Header = () => {
         </li>
       </ul>
 
-      {/* {userAccount ? (
-        <div className="absolute right-[300px]">
+      {userAccount ? (
+        <div className="">
           <IconButton id="basic-menu" onClick={handleClick}>
             <Avatar
               src="/static/images/avatar/1.jpg"
@@ -70,16 +71,16 @@ const Header = () => {
             <Link to={'#'}>Login</Link>
           </button>
         </div>
-      )} */}
+      )}
 
-      <div className="auth absolute right-[100px]">
+      {/* <div className="auth absolute right-[100px]">
         <button className="btn btn-signup">
           <Link to={'#'}>Register</Link>
         </button>
         <button className="btn btn-login">
           <Link to={'#'}>Login</Link>
         </button>
-      </div>
+      </div> */}
     </nav>
   )
 }
