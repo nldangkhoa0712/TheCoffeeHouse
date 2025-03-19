@@ -18,6 +18,7 @@ export const apiRouteConstants = {
     ADDTOCART: '/Cart/AddToCart',
     GETCART: '/Cart/GetCart',
     CREATEORDER: "/Order/CreateOrderFromCart",
+    DELETECART: "/Cart/DeleteCart",
 
     //Address
     GETADDRESS: '/Address/GetAddress',
