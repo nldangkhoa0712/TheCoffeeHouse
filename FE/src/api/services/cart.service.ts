@@ -22,6 +22,19 @@ export const AddToCart = async (param: AddToCartModel) => {
     }
 }
 
+export const RemoveItem = async (cartId: number) => {
+    try {
+        const response = await http.post(
+            apiRouteConstants.DELETECART,
+            { cartId },
+            {}
+        )
+        return response.value
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 export const getAllCart = async () => {
     try {
         const response = await http.get<CartItem[]>(

@@ -16,3 +16,7 @@ export const useGetAllCart = () => {
 export const useCreateOrder = () => {
   return useMutation(CartService.createOrderFromCart)
 }
+
+export const useDeleteCart = () => {
+  return useMutation(CartService.RemoveItem)
+}
