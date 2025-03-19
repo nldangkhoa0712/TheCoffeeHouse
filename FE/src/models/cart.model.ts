@@ -19,6 +19,13 @@ export interface CartDetail {
     isValid: boolean;
 }
 
+export interface ImageModel {
+    firebaseImage: string,
+    imageName: string,
+    imageType: string,
+    imageClassId: number
+}
+
 export interface CartItem {
     productId: number;
     quantity: number;
@@ -27,7 +34,7 @@ export interface CartItem {
     categoryName: string;
     productSizeName: string;
     price: number;
-    imageDefaultNavigation: string | null;
+    imageDefaultNavigation: ImageModel
     cartDetails: CartDetail[];
     cartId: number;
 }

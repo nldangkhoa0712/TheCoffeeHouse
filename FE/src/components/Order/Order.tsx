@@ -105,7 +105,7 @@ const Order = ({ handleChangeCart }: OrderProps) => {
                   }}
                 >
                   <img
-                    src={item.imageDefaultNavigation || undefined}
+                    src={item.imageDefaultNavigation.firebaseImage || undefined}
                     style={{
                       width: '100px',
                       height: '100px',
