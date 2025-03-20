@@ -1,6 +1,11 @@
 import React from 'react'
 import TaskAltIcon from '@mui/icons-material/TaskAlt'
-import { useLocation, useSearchParams } from 'react-router-dom'
+import {
+  Link,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from 'react-router-dom'
 import { useGetParams } from '../../hooks/useGetQueryParams'
 import moment from 'moment'
 import { formatCurrency } from '../../utils/formatCurrency'
@@ -8,10 +13,9 @@ import PaymentFailed from '../PaymentFailed'
 import { PaymentSuccessQueryParamsType } from '../../models/payment.model'
 
 const PaymentSuccess = () => {
+  const navigate = useNavigate()
   const [searchParams, setSearchParams] =
     useGetParams<PaymentSuccessQueryParamsType>()
-  console.log(searchParams.vnp_OrderInfo)
-  console.log(searchParams.vnp_BankCode)
 
   const date = new Date()
   const isValid =
@@ -52,7 +56,7 @@ const PaymentSuccess = () => {
           <div className="flex justify-between">
             <span className="text-gray-600">Tổng thanh toán:</span>
             <span className="font-bold text-green-600">
-              {formatCurrency(searchParams.vnp_Amount)}
+              {formatCurrency(searchParams.vnp_Amount / 100)}
             </span>
           </div>
         </div>
@@ -85,9 +89,11 @@ const PaymentSuccess = () => {
           <button className="w-full rounded-md bg-green-500 px-4 py-2 text-white transition duration-200 hover:bg-green-600">
             Theo dõi đơn hàng
           </button>
-          <button className="w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-gray-800 transition duration-200 hover:bg-gray-50">
-            Tiếp tục mua sắm
-          </button>
+          <Link to="http://192.168.77.101:3000/">
+            <button className="w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-gray-800 transition duration-200 hover:bg-gray-50">
+              Tiếp tục mua sắm
+            </button>
+          </Link>
         </div>
       </div>
 

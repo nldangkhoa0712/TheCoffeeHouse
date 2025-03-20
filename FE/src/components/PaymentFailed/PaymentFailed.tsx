@@ -3,6 +3,7 @@ import TaskAltIcon from '@mui/icons-material/TaskAlt'
 import { useGetParams } from '../../hooks/useGetQueryParams'
 import moment from 'moment'
 import { PaymentSuccessQueryParamsType } from '../../models/payment.model'
+import { Link } from 'react-router-dom'
 
 const PaymentFailed = () => {
   const [searchParams, setSearchParams] =
@@ -75,15 +76,17 @@ const PaymentFailed = () => {
 
         {/* Action Buttons */}
         <div className="flex flex-col space-y-3">
-          <button className="w-full rounded-md bg-red-500 px-4 py-2 text-white transition duration-200 hover:bg-red-600">
+          {/* <button className="w-full rounded-md bg-red-500 px-4 py-2 text-white transition duration-200 hover:bg-red-600">
             Thử lại thanh toán
-          </button>
-          <button className="w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-gray-800 transition duration-200 hover:bg-gray-50">
+          </button> */}
+          {/* <button className="w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-gray-800 transition duration-200 hover:bg-gray-50">
             Chọn phương thức khác
-          </button>
-          <button className="w-full bg-white px-4 py-2 text-gray-500 transition duration-200 hover:text-gray-700">
-            Quay lại giỏ hàng
-          </button>
+          </button> */}
+          <Link to="http://192.168.77.101:3000/">
+            <button className="w-full bg-red-500 px-4 py-2 text-white transition duration-200 hover:bg-amber-50 hover:text-red-500 hover:shadow-2xl">
+              Quay lại trang chủ
+            </button>
+          </Link>
         </div>
       </div>
 
