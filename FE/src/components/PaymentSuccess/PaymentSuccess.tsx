@@ -89,7 +89,7 @@ const PaymentSuccess = () => {
           <button className="w-full rounded-md bg-green-500 px-4 py-2 text-white transition duration-200 hover:bg-green-600">
             Theo dõi đơn hàng
           </button>
-          <Link to="http://192.168.77.101:3000/">
+          <Link to="http://192.168.77.101:3000/page/order-successful">
             <button className="w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-gray-800 transition duration-200 hover:bg-gray-50">
               Tiếp tục mua sắm
             </button>
